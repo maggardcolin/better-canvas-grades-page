@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "Canvas Class Average Calculator",
+  "version": "1.0",
+  "description": "Calculates mean and median grades from Canvas.",
+  "permissions": ["activeTab"],
+  "content_scripts": [
+    {
+      "matches": ["https://*canvas.wisc.edu/*"],
+      "js": ["content.js"]
+    }
+  ]
+}
