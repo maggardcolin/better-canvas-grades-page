@@ -304,7 +304,8 @@ function visualUpdates() {
 
 visualUpdates();
 const totalGrade = document.querySelector('.final_grade');
-if ((totalGrade.textContent.trim() !== "Calculation of totals has been disabled")) {
+const gradePercentage = document.querySelector('.grade');
+if ((totalGrade.textContent.trim() !== "Calculation of totals has been disabled") && (gradePercentage.textContent.trim() !== "N/A")) {
     calculateAndDisplayGrades();
 }
 toggleUngradedAssignments();
