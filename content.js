@@ -38,16 +38,19 @@ function calculateAndDisplayGrades() {
 }
 
 function displayResults(mean, median) {
-    const resultsContainer = document.querySelector('.final_grade');
-    resultsContainer.textContent = '';
-    resultsContainer.append("Mean: ");
+    const resultsContainer = document.querySelector('#student-grades-right-content');
+    const totalGrade = resultsContainer.querySelector('.final_grade');
+    console.log(totalGrade.textContent);
+    totalGrade.append(document.createElement('br'));
+    totalGrade.append("Mean: ");
     const meanSpan = document.createElement('span');
-    meanSpan.textContent = mean.toFixed(2);;
-    resultsContainer.append(meanSpan);
-    resultsContainer.append("Median: ");
+    meanSpan.textContent = `${mean.toFixed(2)}%`;
+    totalGrade.append(meanSpan);
+    totalGrade.append(document.createElement('br'));
+    totalGrade.append("Median: ");
     const medianSpan = document.createElement('span');
-    medianSpan.textContent = median.toFixed(2);;
-    resultsContainer.append(medianSpan);
+    medianSpan.textContent = `${median.toFixed(2)}%`;
+    totalGrade.append(medianSpan);
 }
 
 calculateAndDisplayGrades();
