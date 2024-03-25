@@ -227,7 +227,6 @@ function displayResults(you, mean, median, upperQuartile, lowerQuartile) {
 
     // add an option to only show graded assignments
     const onlyGradedWrapper = document.createElement('div');
-    // onlyGradedWrapper.classList.add('ic-Form-control', 'ic-Form-control--checkbox');
     const onlyGradedBox = document.createElement('input');
     onlyGradedBox.id = 'only-graded-assignments';
     onlyGradedBox.type = 'checkbox';
@@ -245,6 +244,7 @@ function displayResults(you, mean, median, upperQuartile, lowerQuartile) {
     gradeHeader = document.querySelector('.ic-Action-header__Heading');
     let classText = document.querySelector('.mobile-header-title').querySelector('div').textContent;
     gradeHeader.textContent = `Grades for ${classText}`;
+    document.title = `Grades for ${classText}`;
 
 }
 
