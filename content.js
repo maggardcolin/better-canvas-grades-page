@@ -21,6 +21,7 @@ function calculateAndDisplayGrades() {
         let categoryDict = {
             title: title,
             percentage: percentageDecimal,
+            drops: 0,
             yourGrade: 0,
             meanPoints: 0,
             medianPoints: 0,
@@ -37,6 +38,7 @@ function calculateAndDisplayGrades() {
     *  Data gathering section  *
     ***************************/
     let assignmentCategories = [];
+    let droppedGrades = []; // 0 for dropped, 1 for included
 
     // find all assignments, see which categories they are
     const assignments = document.querySelectorAll('.student_assignment.assignment_graded');
@@ -44,7 +46,11 @@ function calculateAndDisplayGrades() {
     assignments.forEach(assignment => {
         const category = assignment.querySelector('.context').textContent.trim();
         assignmentCategories.push(category);
+        const isDropped = assignment.classList.contains('dropped');
+        droppedGrades.push(isDropped ? 0 : 1);
     });
+
+    console.log(droppedGrades);
 
     // find means and medians and max possible points
     let means = [];
@@ -118,7 +124,7 @@ function calculateAndDisplayGrades() {
     // add the percentage if it was used, otherwise do not
     let totalPercentageUsed = 0;
     categoryDetails.forEach(category => {
-        console.log(`${category.title} (${category.percentage * 100}%)\nMean: ${category.meanPoints}\nMedian: ${category.medianPoints}\nTotal possible: ${category.totalPoints}`);
+        console.log(`${category.title} (${category.percentage * 100}%)\nYour Score: ${category.yourGrade}\nMean: ${category.meanPoints}\nMedian: ${category.medianPoints}\nTotal possible: ${category.totalPoints}`);
         if (category.totalPoints > 0) {
             totalPercentageUsed += category.percentage;
         }
