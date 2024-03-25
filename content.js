@@ -27,6 +27,9 @@ function calculateAndDisplayGrades() {
     });
     console.log(categoryDetails);
 
+    /***************************
+    *  Data gathering section  *
+    ***************************/
     let assignmentCategories = [];
 
     // find all assignments, see which categories they are
@@ -90,6 +93,9 @@ function calculateAndDisplayGrades() {
         });
     });
 
+    /************************
+    *  Calculation section  *
+    ************************/
     // add the percentage if it was used, otherwise do not
     let totalPercentageUsed = 0;
     categoryDetails.forEach(category => {
@@ -166,7 +172,6 @@ function displayResults(mean, median, upperQuartile, lowerQuartile) {
     const lowerSpan = document.createElement('span');
     lowerSpan.textContent = `${lowerQuartile.toFixed(2)}%`;
     totalGrade.append(lowerSpan);
-
 }
 
 calculateAndDisplayGrades();
