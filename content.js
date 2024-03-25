@@ -161,7 +161,7 @@ function calculateAndDisplayGrades() {
 function displayResults(you, mean, median, upperQuartile, lowerQuartile) {
     const resultsContainer = document.querySelector('#student-grades-right-content');
     const totalGrade = resultsContainer.querySelector('.final_grade');
-    let zone = (you > upperQuartile) ? 'Top 25% of class' : (you > median) ? 'Above average' : (you > lowerQuartile) ? 'Below average' : 'Bottom 25% of class';
+    let zone = (you > upperQuartile) ? 'Top 25% of Class' : (you > median) ? 'Above Average' : (you > lowerQuartile) ? 'Below Average' : 'Bottom 25% of Class';
     // label
     const gradeLabel = document.createElement('h2');
     gradeLabel.textContent = 'Your Performance';
