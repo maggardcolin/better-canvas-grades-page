@@ -1,6 +1,6 @@
 # Better Canvas Grades Page Extension
 - Chrome extension that calculates and displays the mean and median grades for a given class, useful for determining your relative position in classes that are curved.
-- Added several other text and visual changes to make the page a bit better (most changes are minor but helpful in my opinion).
+- Added several other text and visual changes to make the page a bit better (most changes are minor but helpful in my opinion), such as hiding ungraded assignments and categories.
 
 ## Notes
 - I am *not* going to implement dropped grades in the calculations because there is no way to know which assignments are dropped by your classmates, so take the cutoffs/range text with a grain of salt if your class uses assignment drops.
