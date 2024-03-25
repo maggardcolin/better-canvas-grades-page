@@ -55,39 +55,47 @@ function calculateAndDisplayGrades() {
     let maxValues = [];
 
     gradeBoxes.forEach(box => {
-        const fields = box.querySelector('tbody tr td').textContent.split('\n').map(field => field.trim()).filter(field => field !== '');
-        fields.forEach((field, index) => {
-            if (field === "Mean:" && index + 1 < fields.length) {
-                const meanValue = parseFloat(fields[index + 1]);
-                if (!isNaN(meanValue)) {
-                    means.push(meanValue);
+        try {
+            const fields = box.querySelector('tbody tr td').textContent.split('\n').map(field => field.trim()).filter(field => field !== '');
+            fields.forEach((field, index) => {
+                try {
+                    if (field === "Mean:" && index + 1 < fields.length) {
+                        const meanValue = parseFloat(fields[index + 1]);
+                        if (!isNaN(meanValue)) {
+                            means.push(meanValue);
+                        }
+                    } else if (field === "Median:" && index + 1 < fields.length) {
+                        const medianValue = parseFloat(fields[index + 1]);
+                        if (!isNaN(medianValue)) {
+                            medians.push(medianValue);
+                        }
+                    } else if (field === "Upper Quartile:" && index + 1 < fields.length) {
+                        const upperValue = parseFloat(fields[index + 1]);
+                        if (!isNaN(upperValue)) {
+                            upperQuartiles.push(upperValue);
+                        }
+                    } else if (field === "Lower Quartile:" && index + 1 < fields.length) {
+                        const lowerValue = parseFloat(fields[index + 1]);
+                        if (!isNaN(lowerValue)) {
+                            lowerQuartiles.push(lowerValue);
+                        }
+                    } else if (field.includes("Your Score:")) {
+                        const yourScore = parseFloat((field.split(' out of ')[0]).split('Your Score: ')[1]);
+                        const maxvalue = parseFloat(field.split(' out of ')[1]);
+                        if (!isNaN(yourScore)) {
+                            yourGrades.push(yourScore);
+                        }
+                        if (!isNaN(maxvalue)) {
+                            maxValues.push(maxvalue);
+                        }
+                    }
+                } catch (e) {
+                    console.log(e);
                 }
-            } else if (field === "Median:" && index + 1 < fields.length) {
-                const medianValue = parseFloat(fields[index + 1]);
-                if (!isNaN(medianValue)) {
-                    medians.push(medianValue);
-                }
-            } else if (field === "Upper Quartile:" && index + 1 < fields.length) {
-                const upperValue = parseFloat(fields[index + 1]);
-                if (!isNaN(upperValue)) {
-                    upperQuartiles.push(upperValue);
-                }
-            } else if (field === "Lower Quartile:" && index + 1 < fields.length) {
-                const lowerValue = parseFloat(fields[index + 1]);
-                if (!isNaN(lowerValue)) {
-                    lowerQuartiles.push(lowerValue);
-                }
-            } else if (field.includes("Your Score:")) {
-                const yourScore = parseFloat((field.split(' out of ')[0]).split('Your Score: ')[1]);
-                const maxvalue = parseFloat(field.split(' out of ')[1]);
-                if (!isNaN(yourScore)) {
-                    yourGrades.push(yourScore);
-                }
-                if (!isNaN(maxvalue)) {
-                    maxValues.push(maxvalue);
-                }
-            }
-        });
+            });
+        } catch (e) {
+            console.log(e);
+        }
     });
 
     // add the mean and median points to the correct categories
