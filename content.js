@@ -202,6 +202,12 @@ function displayResults(you, mean, median, upperQuartile, lowerQuartile) {
     totalGrade.append(lowerSpan);
     totalGrade.append(document.createElement('br'));
     totalGrade.append(document.createElement('br'));
+
+    // other minor visual adjustments to the page
+    showDetailsButton = document.querySelector('.show_all_details');
+    showDetailsButton.append(document.createElement('br'));
+    showDetailsButton.append(document.createElement('br'));
+
 }
 
 calculateAndDisplayGrades();
