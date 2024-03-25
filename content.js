@@ -223,13 +223,15 @@ function toggleUngradedAssignments() {
         }
     });
 
-    categories.forEach(category => {
-        let categoryText = category.querySelector('.grade').textContent.trim();
-        console.log(categoryText)
-        if (categoryText === 'N/A') {
-            category.style.display = hideUngradedAssignments ? 'none' : 'table-row';
-        }
-    });
+    setTimeout(function() {
+        categories.forEach(category => {
+            let categoryText = category.querySelector('.grade').textContent.trim();
+            console.log(categoryText)
+            if (categoryText === 'N/A') {
+                category.style.display = hideUngradedAssignments ? 'none' : 'table-row';
+            }
+        });
+      }, 150);
 }
 
 function visualUpdates() {
