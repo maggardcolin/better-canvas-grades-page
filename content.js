@@ -35,8 +35,7 @@ function calculateAndDisplayGrades() {
         assignmentCategories.push(category);
     });
 
-
-    // find means and medians
+    // find means and medians and max possible points
     let means = [];
     let medians = [];
     let maxValues = [];
@@ -74,9 +73,16 @@ function calculateAndDisplayGrades() {
         });
     });
 
+    // add the percentage if it was used, otherwise do not
+    let totalPercentageUsed = 0;
     categoryDetails.forEach(category => {
-        console.log(`${category.title}\nMean: ${category.meanPoints}\nMedian: ${category.medianPoints}\nTotal possible: ${category.totalPoints}`);
+        console.log(`${category.title} (${category.percentage * 100}%)\nMean: ${category.meanPoints}\nMedian: ${category.medianPoints}\nTotal possible: ${category.totalPoints}`);
+        if (category.totalPoints > 0) {
+            totalPercentageUsed += category.percentage;
+        }
     });
+
+    console.log(totalPercentageUsed);
 
     // calculate the mean percentage grade in the class assuming not all categories may be filled
     let mean = 0;
@@ -85,6 +91,7 @@ function calculateAndDisplayGrades() {
             mean += category.percentage * (category.meanPoints / category.totalPoints) * 100;
         }
     });
+    mean /= totalPercentageUsed;
 
     // calculate the median percentage grade in the class assuming not all categories may be filled
     let median = 0;
@@ -93,6 +100,7 @@ function calculateAndDisplayGrades() {
             median += category.percentage * (category.medianPoints / category.totalPoints) * 100;
         }
     });
+    median /= totalPercentageUsed;
 
     displayResults(mean, median);
 }
