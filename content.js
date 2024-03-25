@@ -1,3 +1,6 @@
+// global variables
+let hideUngradedAssignments = true;
+
 function calculateAndDisplayGrades() {
 
     // find categories and percentages and create dictionary for each category
@@ -220,12 +223,40 @@ function displayResults(you, mean, median, upperQuartile, lowerQuartile) {
             row.remove();
         }
     });
+    document.querySelector('#whatif-score-description').remove();
+
+    // add an option to only show graded assignments
+    const onlyGradedWrapper = document.createElement('div');
+    // onlyGradedWrapper.classList.add('ic-Form-control', 'ic-Form-control--checkbox');
+    const onlyGradedBox = document.createElement('input');
+    onlyGradedBox.id = 'only-graded-assignments';
+    onlyGradedBox.type = 'checkbox';
+    onlyGradedBox.checked = true;
+    const onlyGradedLabel = document.createElement('label');
+    onlyGradedLabel.for = 'only-graded-assignments';
+    onlyGradedLabel.textContent = 'Only display graded assignments';
+
+    onlyGradedWrapper.appendChild(onlyGradedBox);
+    onlyGradedWrapper.appendChild(onlyGradedLabel);
+    weightingDesc.appendChild(onlyGradedWrapper);
+    document.querySelector('#only-graded-assignments').addEventListener('change', toggleUngradedAssignments);
 
     // updates to say which class the grades are for, not your name
     gradeHeader = document.querySelector('.ic-Action-header__Heading');
     let classText = document.querySelector('.mobile-header-title').querySelector('div').textContent;
     gradeHeader.textContent = `Grades for ${classText}`;
 
+}
+
+function toggleUngradedAssignments() {
+    hideUngradedAssignments = !hideUngradedAssignments;
+    const assignments = document.querySelectorAll('.student_assignment.editable');
+
+    assignments.forEach(assignment => {
+        if (!assignment.classList.contains('assignment_graded')) {
+            assignment.style.display = hideUngradedAssignments ? 'none' : 'table-cell';
+        }
+    });
 }
 
 calculateAndDisplayGrades();
