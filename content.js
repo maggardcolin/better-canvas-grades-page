@@ -164,6 +164,9 @@ function calculateAndDisplayGrades() {
 function displayResults(you, mean, median, upperQuartile, lowerQuartile) {
     const resultsContainer = document.querySelector('#student-grades-right-content');
     const totalGrade = resultsContainer.querySelector('.final_grade');
+    const totalPercentage = totalGrade.querySelector('.grade');
+    totalGrade.style.fontWeight = 'bold';
+    totalPercentage.style.fontWeight = 'bold';
     let zone = (you > upperQuartile) ? 'Top 25% of Class' : (you > median) ? 'Above Average' : (you > lowerQuartile) ? 'Below Average' : 'Bottom 25% of Class';
     // label
     const gradeLabel = document.createElement('h2');
@@ -173,6 +176,7 @@ function displayResults(you, mean, median, upperQuartile, lowerQuartile) {
     totalGrade.append(document.createElement('br'));
     const relPerformance = document.createElement('span');
     relPerformance.textContent = zone;
+    relPerformance.style.fontWeight = 'normal';
     totalGrade.append(relPerformance);
     totalGrade.append(document.createElement('br'));
     totalGrade.append(document.createElement('br'));
@@ -181,27 +185,27 @@ function displayResults(you, mean, median, upperQuartile, lowerQuartile) {
     classPerformance.textContent = 'Class Performance';
     totalGrade.append(classPerformance);
     // mean
-    totalGrade.append("Mean: ");
     const meanSpan = document.createElement('span');
-    meanSpan.textContent = `${mean.toFixed(2)}%`;
+    meanSpan.textContent = `Mean: ${mean.toFixed(2)}%`;
+    meanSpan.style.fontWeight = 'normal';
     totalGrade.append(meanSpan);
     totalGrade.append(document.createElement('br'));
     // upper quartile
-    totalGrade.append("Upper Quartile: ");
     const upperSpan = document.createElement('span');
-    upperSpan.textContent = `${upperQuartile.toFixed(2)}%`;
+    upperSpan.textContent = `Upper Quartile: ${upperQuartile.toFixed(2)}%`;
+    upperSpan.style.fontWeight = 'normal';
     totalGrade.append(upperSpan);
     totalGrade.append(document.createElement('br'));
     // median
-    totalGrade.append("Median: ");
     const medianSpan = document.createElement('span');
-    medianSpan.textContent = `${median.toFixed(2)}%`;
+    medianSpan.textContent = `Median: ${median.toFixed(2)}%`;
+    medianSpan.style.fontWeight = 'normal';
     totalGrade.append(medianSpan);
     totalGrade.append(document.createElement('br'));
     // lower quartile
-    totalGrade.append("Lower Quartile: ");
     const lowerSpan = document.createElement('span');
-    lowerSpan.textContent = `${lowerQuartile.toFixed(2)}%`;
+    lowerSpan.textContent = `Lower Quartile: ${lowerQuartile.toFixed(2)}%`;
+    lowerSpan.style.fontWeight = 'normal';
     totalGrade.append(lowerSpan);
     totalGrade.append(document.createElement('br'));
     totalGrade.append(document.createElement('br'));
