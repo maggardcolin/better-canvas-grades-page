@@ -268,20 +268,31 @@ function visualUpdates() {
         } catch (e) {
             console.log(e);
         }
-        
     }
     document.querySelector('#whatif-score-description').remove();
 
     // add an option to only show graded assignments
     const onlyGradedWrapper = document.createElement('div');
+    onlyGradedWrapper.style.display = 'flex';
+    onlyGradedWrapper.style.flexDirection = 'horizontal';
+
+    // checkbox
     const onlyGradedBox = document.createElement('input');
     onlyGradedBox.id = 'only-graded-assignments';
     onlyGradedBox.type = 'checkbox';
     onlyGradedBox.checked = true;
+    onlyGradedBox.style.accentColor = '#080808';
+    onlyGradedBox.style.width = '20px';
+    onlyGradedBox.style.margin = '3px 8px 3px 0px';
+    onlyGradedBox.style.borderRadius = '5px';
+
+    // associated label
     const onlyGradedLabel = document.createElement('label');
     onlyGradedLabel.for = 'only-graded-assignments';
     onlyGradedLabel.textContent = 'Only display graded assignments and categories';
-
+    onlyGradedLabel.style.color = '#000000';
+    
+    // put it all together
     onlyGradedWrapper.appendChild(onlyGradedBox);
     onlyGradedWrapper.appendChild(onlyGradedLabel);
     weightingDesc.appendChild(onlyGradedWrapper);
