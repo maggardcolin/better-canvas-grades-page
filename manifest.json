@@ -6,8 +6,8 @@
   "permissions": ["activeTab"],
   "content_scripts": [
     {
-      "matches": ["https://*canvas.wisc.edu/*"],
-      "js": ["content.js"]
+      "matches": ["https://canvas.wisc.edu/courses/*/grades"],
+      "js": ["./content.js"]
     }
-  ]
+  ]  
 }
