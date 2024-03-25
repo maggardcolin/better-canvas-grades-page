@@ -226,12 +226,15 @@ function toggleUngradedAssignments() {
     setTimeout(function() {
         categories.forEach(category => {
             let categoryText = category.querySelector('.grade').textContent.trim();
-            console.log(categoryText)
             if (categoryText === 'N/A') {
                 category.style.display = hideUngradedAssignments ? 'none' : 'table-row';
             }
         });
       }, 150);
+
+    const gradeSummary = document.querySelector('#grade-summary-content');
+    const smallMessage = gradeSummary.querySelector('small');
+    smallMessage.style.display = hideUngradedAssignments ? 'none' : 'block';
 }
 
 function visualUpdates() {
