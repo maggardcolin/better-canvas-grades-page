@@ -9,7 +9,7 @@ function calculateAndDisplayGrades() {
         const title = category.textContent.split("\n")[1].trim();
         const percentage = category.textContent.split("\n")[2].trim();
         let percentageValue = parseFloat(percentage.replace('%', ''));
-        let percentageDecimal = Math.round((percentageValue / 100) * 10) / 10;
+        let percentageDecimal = (percentageValue / 100);
 
         // create a dictionary where there is a title, percentage, and total field
         let categoryDict = {
@@ -82,8 +82,6 @@ function calculateAndDisplayGrades() {
         }
     });
 
-    console.log(totalPercentageUsed);
-
     // calculate the mean percentage grade in the class assuming not all categories may be filled
     let mean = 0;
     categoryDetails.forEach(category => {
@@ -108,7 +106,6 @@ function calculateAndDisplayGrades() {
 function displayResults(mean, median) {
     const resultsContainer = document.querySelector('#student-grades-right-content');
     const totalGrade = resultsContainer.querySelector('.final_grade');
-    console.log(totalGrade.textContent);
     totalGrade.append(document.createElement('br'));
     totalGrade.append("Mean: ");
     const meanSpan = document.createElement('span');
