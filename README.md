@@ -2,7 +2,7 @@
 - Chrome extension that calculates and displays the mean and median grades for a given class, useful for determining your relative position in classes that are curved.
 - I am *not* going to implement dropped grades in the calculations because there is no way to know which assignments are dropped by your classmates, so take the cutoffs/range text with a grain of salt if your class uses assignment drops.
 - The range text under your total grade is based on the median, not the mean.
-- This allows you to print your grades without it putting ungraded assignments in the output.
+- This allows you to print your grades without it putting ungraded assignments in the output (not sure why this was a feature of Canvas to begin with).
 - Added several other text and visual changes to make the page a bit better.
 
 ## Example Output from CompSci 354
