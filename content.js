@@ -201,6 +201,7 @@ function displayResults(you, mean, median, upperQuartile, lowerQuartile) {
     lowerSpan.textContent = `${lowerQuartile.toFixed(2)}%`;
     totalGrade.append(lowerSpan);
     totalGrade.append(document.createElement('br'));
+    totalGrade.append(document.createElement('br'));
 }
 
 calculateAndDisplayGrades();
