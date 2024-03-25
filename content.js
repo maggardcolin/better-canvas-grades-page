@@ -15,6 +15,7 @@ function calculateAndDisplayGrades() {
         let categoryDict = {
             title: title,
             percentage: percentageDecimal,
+            yourGrade: 0,
             meanPoints: 0,
             medianPoints: 0,
             upperQuartile: 0,
@@ -25,7 +26,6 @@ function calculateAndDisplayGrades() {
             categoryDetails.push(categoryDict);
         }
     });
-    console.log(categoryDetails);
 
     /***************************
     *  Data gathering section  *
@@ -43,6 +43,7 @@ function calculateAndDisplayGrades() {
     // find means and medians and max possible points
     let means = [];
     let medians = [];
+    let yourGrades = [];
     let upperQuartiles = [];
     let lowerQuartiles = [];
     let maxValues = [];
@@ -50,7 +51,6 @@ function calculateAndDisplayGrades() {
     gradeBoxes.forEach(box => {
         const fields = box.querySelector('tbody tr td').textContent.split('\n').map(field => field.trim()).filter(field => field !== '');
         fields.forEach((field, index) => {
-            console.log(field);
             if (field === "Mean:" && index + 1 < fields.length) {
                 const meanValue = parseFloat(fields[index + 1]);
                 if (!isNaN(meanValue)) {
@@ -72,7 +72,11 @@ function calculateAndDisplayGrades() {
                     lowerQuartiles.push(lowerValue);
                 }
             } else if (field.includes("Your Score:")) {
-                const maxvalue = parseFloat(field.split('out of ')[1]);
+                const yourScore = parseFloat((field.split(' out of ')[0]).split('Your Score: ')[1]);
+                const maxvalue = parseFloat(field.split(' out of ')[1]);
+                if (!isNaN(yourScore)) {
+                    yourGrades.push(yourScore);
+                }
                 if (!isNaN(maxvalue)) {
                     maxValues.push(maxvalue);
                 }
@@ -84,6 +88,7 @@ function calculateAndDisplayGrades() {
     assignmentCategories.forEach((assignment, index) => {
         categoryDetails.forEach(category => {
             if (assignment === category.title) {
+                category.yourGrade += yourGrades[index];
                 category.meanPoints += means[index];
                 category.medianPoints += medians[index];
                 category.totalPoints += maxValues[index];
@@ -104,6 +109,15 @@ function calculateAndDisplayGrades() {
             totalPercentageUsed += category.percentage;
         }
     });
+
+    // calculate your grade
+    let you = 0;
+    categoryDetails.forEach(category => {
+        if (category.totalPoints !== 0) {
+            you += category.percentage * (category.yourGrade / category.totalPoints) * 100;
+        }
+    });
+    you /= totalPercentageUsed;
 
     // calculate the mean percentage grade in the class assuming not all categories may be filled
     let mean = 0;
@@ -141,19 +155,33 @@ function calculateAndDisplayGrades() {
     });
     lowerQuartile /= totalPercentageUsed;
 
-    displayResults(mean, median, upperQuartile, lowerQuartile);
+    displayResults(you, mean, median, upperQuartile, lowerQuartile);
 }
 
-function displayResults(mean, median, upperQuartile, lowerQuartile) {
+function displayResults(you, mean, median, upperQuartile, lowerQuartile) {
     const resultsContainer = document.querySelector('#student-grades-right-content');
     const totalGrade = resultsContainer.querySelector('.final_grade');
+    let zone = (you > upperQuartile) ? 'Top 25% of class' : (you > median) ? 'Above average' : (you > lowerQuartile) ? 'Below average' : 'Bottom 25% of class';
+    // label
+    const gradeLabel = document.createElement('h2');
+    gradeLabel.textContent = 'Your Performance';
+    totalGrade.prepend(gradeLabel);
+    // Your relative performance
     totalGrade.append(document.createElement('br'));
+    const relPerformance = document.createElement('span');
+    relPerformance.textContent = zone;
+    totalGrade.append(relPerformance);
+    totalGrade.append(document.createElement('br'));
+    totalGrade.append(document.createElement('br'));
+    // class performance
+    const classPerformance = document.createElement('h2');
+    classPerformance.textContent = 'Class Performance';
+    totalGrade.append(classPerformance);
     // mean
     totalGrade.append("Mean: ");
     const meanSpan = document.createElement('span');
     meanSpan.textContent = `${mean.toFixed(2)}%`;
     totalGrade.append(meanSpan);
-    totalGrade.append(document.createElement('br'));
     totalGrade.append(document.createElement('br'));
     // upper quartile
     totalGrade.append("Upper Quartile: ");
@@ -172,6 +200,7 @@ function displayResults(mean, median, upperQuartile, lowerQuartile) {
     const lowerSpan = document.createElement('span');
     lowerSpan.textContent = `${lowerQuartile.toFixed(2)}%`;
     totalGrade.append(lowerSpan);
+    totalGrade.append(document.createElement('br'));
 }
 
 calculateAndDisplayGrades();
