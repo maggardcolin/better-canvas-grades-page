@@ -6,7 +6,7 @@
   "permissions": ["activeTab"],
   "content_scripts": [
     {
-        "matches": ["*://*/courses/*/grades"],
+        "matches": ["*://*/courses/*"],
         "js": ["./content.js"]
     }
   ]  

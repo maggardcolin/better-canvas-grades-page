@@ -210,7 +210,22 @@ function displayResults(you, mean, median, upperQuartile, lowerQuartile) {
     totalGrade.append(document.createElement('br'));
     totalGrade.append(document.createElement('br'));
 
+}
+
+function toggleUngradedAssignments() {
+    hideUngradedAssignments = !hideUngradedAssignments;
+    const assignments = document.querySelectorAll('.student_assignment.editable');
+
+    assignments.forEach(assignment => {
+        if (!assignment.classList.contains('assignment_graded')) {
+            assignment.style.display = hideUngradedAssignments ? 'none' : 'table-row';
+        }
+    });
+}
+
+function visualUpdates() {
     // other minor visual adjustments to the page, I will have a way to turn these off eventually
+    document.querySelector('.grades').querySelector('.nav-badge').textContent = '';
 
     // adds space under the details button
     showDetailsButton = document.querySelector('.show_all_details');
@@ -250,18 +265,13 @@ function displayResults(you, mean, median, upperQuartile, lowerQuartile) {
     gradeHeader.textContent = `Grades for ${classText}`;
     document.title = `Grades for ${classText}`;
 
-}
-
-function toggleUngradedAssignments() {
-    hideUngradedAssignments = !hideUngradedAssignments;
-    const assignments = document.querySelectorAll('.student_assignment.editable');
-
-    assignments.forEach(assignment => {
-        if (!assignment.classList.contains('assignment_graded')) {
-            assignment.style.display = hideUngradedAssignments ? 'none' : 'table-row';
-        }
+    // delete those grade dots that I can never figure out how to get off
+    gradeDots = document.querySelectorAll('.unread_dot.grade_dot');
+    gradeDots.forEach(dot => {
+        dot.remove();
     });
 }
 
+visualUpdates();
 calculateAndDisplayGrades();
 toggleUngradedAssignments();
