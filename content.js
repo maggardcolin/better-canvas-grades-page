@@ -5,6 +5,9 @@ function calculateAndDisplayGrades() {
 
     // find categories and percentages and create dictionary for each category
     const summaryTable = document.querySelector('.summary');
+    if (!summaryTable) {
+        return;
+    }
     const summaryBody = summaryTable.querySelector('tbody');
     const categories = summaryBody.querySelectorAll('tr');
     let categoryDetails = [];
@@ -225,7 +228,7 @@ function toggleUngradedAssignments() {
     setTimeout(function() {
         categories.forEach(category => {
             let categoryText = category.querySelector('.grade').textContent.trim();
-            if (categoryText === 'N/A') {
+            if (categoryText === 'N/A' || categoryText === 'Instructor has not posted this grade') {
                 category.style.display = hideUngradedAssignments ? 'none' : 'table-row';
             }
         });
@@ -253,14 +256,19 @@ function visualUpdates() {
     // makes some text less wordy/more understandable/better around the page
     weightingDesc = document.querySelector('#assignments-not-weighted');
     if (weightingDesc) {
-        weightingDesc.querySelector('h2').textContent = 'Category Weights';
-        weightingDesc.querySelector('table thead tr').remove();
-        descRows = weightingDesc.querySelectorAll('table tbody tr');
-        descRows.forEach(row => {
-            if (row.querySelector('th').textContent === 'Total') {
-                row.remove();
-            }
-        });
+        try {
+            weightingDesc.querySelector('h2').textContent = 'Category Weights';
+            weightingDesc.querySelector('table thead tr').remove();
+            descRows = weightingDesc.querySelectorAll('table tbody tr');
+            descRows.forEach(row => {
+                if (row.querySelector('th').textContent === 'Total') {
+                    row.remove();
+                }
+            });
+        } catch (e) {
+            console.log(e);
+        }
+        
     }
     document.querySelector('#whatif-score-description').remove();
 
@@ -295,5 +303,8 @@ function visualUpdates() {
 }
 
 visualUpdates();
-calculateAndDisplayGrades();
+const totalGrade = document.querySelector('.final_grade');
+if ((totalGrade.textContent.trim() !== "Calculation of totals has been disabled")) {
+    calculateAndDisplayGrades();
+}
 toggleUngradedAssignments();
