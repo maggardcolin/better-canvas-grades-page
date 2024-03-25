@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Better Canvas Grades Page",
   "version": "1.0",
-  "description": "Calculates mean and median grades from Canvas.",
+  "description": "Makes the Canvas Grades page more functional and visually appealing.",
   "permissions": ["activeTab"],
   "content_scripts": [
     {
