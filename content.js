@@ -300,12 +300,30 @@ function visualUpdates() {
     gradeDots.forEach(dot => {
         dot.remove();
     });
+
+    // remove ungraded categories
+    const summaryTable = document.querySelector('.summary');
+    if (summaryTable) {
+        const summaryBody = summaryTable.querySelector('tbody');
+        const categories = summaryBody.querySelectorAll('tr');
+        categories.forEach(category => {
+            percentage = category.querySelector('td').textContent;
+            if (percentage && percentage === '0%') {
+                category.remove();
+            }
+        });
+    }
 }
 
-visualUpdates();
+allChanges = true;
+if (allChanges) {
+    visualUpdates();
+}
 const totalGrade = document.querySelector('.final_grade');
 const gradePercentage = document.querySelector('.grade');
 if ((totalGrade.textContent.trim() !== "Calculation of totals has been disabled") && (gradePercentage.textContent.trim() !== "N/A")) {
     calculateAndDisplayGrades();
 }
-toggleUngradedAssignments();
+if (allChanges) {
+    toggleUngradedAssignments();
+}
