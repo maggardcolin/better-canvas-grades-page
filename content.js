@@ -203,10 +203,22 @@ function displayResults(you, mean, median, upperQuartile, lowerQuartile) {
     totalGrade.append(document.createElement('br'));
     totalGrade.append(document.createElement('br'));
 
-    // other minor visual adjustments to the page
+    // other minor visual adjustments to the page, I will have a way to turn these off eventually
+
+    // adds space under the details button
     showDetailsButton = document.querySelector('.show_all_details');
     showDetailsButton.append(document.createElement('br'));
     showDetailsButton.append(document.createElement('br'));
+
+    // makes some text less wordy
+    weightingDesc = document.querySelector('#assignments-not-weighted');
+    weightingDesc.querySelector('h2').textContent = 'Category Weights'
+
+    // updates to say which class the grades are for, not your name
+    gradeHeader = document.querySelector('.ic-Action-header__Heading');
+    let classText = document.querySelector('.mobile-header-title').querySelector('div').textContent;
+    console.log(classText);
+    gradeHeader.textContent = `Grades for ${classText}`;
 
 }
 
