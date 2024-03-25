@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Canvas Class Average Calculator",
+  "name": "Better Canvas Grades Page",
   "version": "1.0",
   "description": "Calculates mean and median grades from Canvas.",
   "permissions": ["activeTab"],
