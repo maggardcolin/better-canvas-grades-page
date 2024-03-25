@@ -15,6 +15,8 @@ function calculateAndDisplayGrades() {
         let categoryDict = {
             title: title,
             percentage: percentageDecimal,
+            meanPoints: 0,
+            medianPoints: 0,
             totalPoints: 0
         };
         if (title !== 'Total') {
@@ -37,6 +39,7 @@ function calculateAndDisplayGrades() {
     // find means and medians
     let means = [];
     let medians = [];
+    let maxValues = [];
 
     gradeBoxes.forEach(box => {
         const fields = box.querySelector('tbody tr td').textContent.split('\n').map(field => field.trim()).filter(field => field !== '');
@@ -51,24 +54,45 @@ function calculateAndDisplayGrades() {
                 if (!isNaN(medianValue)) {
                     medians.push(medianValue);
                 }
+            } else if (field.includes("Your Score:")) {
+                const maxvalue = parseFloat(field.split('out of ')[1]);
+                if (!isNaN(maxvalue)) {
+                    maxValues.push(maxvalue);
+                }
             }
         });
     });
 
-    console.log(assignmentCategories.length);
-    console.log(means.length);
-    console.log(medians.length);
+    // add the mean and median points to the correct categories
+    assignmentCategories.forEach((assignment, index) => {
+        categoryDetails.forEach(category => {
+            if (assignment === category.title) {
+                category.meanPoints += means[index];
+                category.medianPoints += medians[index];
+                category.totalPoints += maxValues[index];
+            }
+        });
+    });
 
-    // append points to the correct mean point total
+    categoryDetails.forEach(category => {
+        console.log(`${category.title}\nMean: ${category.meanPoints}\nMedian: ${category.medianPoints}\nTotal possible: ${category.totalPoints}`);
+    });
 
-    // find all median grades, append points to the correct median point total
+    // calculate the mean percentage grade in the class assuming not all categories may be filled
+    let mean = 0;
+    categoryDetails.forEach(category => {
+        if (category.totalPoints !== 0) {
+            mean += category.percentage * (category.meanPoints / category.totalPoints) * 100;
+        }
+    });
 
-    // calculate the mean grade in the class assuming not all categories may be filled
-
-    // calculate the median grade in the class assuming not all categories may be filled
-
-    let mean = 1;
-    let median = 2;
+    // calculate the median percentage grade in the class assuming not all categories may be filled
+    let median = 0;
+    categoryDetails.forEach(category => {
+        if (category.totalPoints !== 0) {
+            median += category.percentage * (category.medianPoints / category.totalPoints) * 100;
+        }
+    });
 
     displayResults(mean, median);
 }
