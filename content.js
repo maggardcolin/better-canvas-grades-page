@@ -209,7 +209,6 @@ function displayResults(you, mean, median, upperQuartile, lowerQuartile) {
     totalGrade.append(lowerSpan);
     totalGrade.append(document.createElement('br'));
     totalGrade.append(document.createElement('br'));
-
 }
 
 function toggleUngradedAssignments() {
@@ -234,12 +233,17 @@ function toggleUngradedAssignments() {
 
     const gradeSummary = document.querySelector('#grade-summary-content');
     const smallMessage = gradeSummary.querySelector('small');
-    smallMessage.style.display = hideUngradedAssignments ? 'none' : 'block';
+    if (smallMessage) {
+        smallMessage.style.display = hideUngradedAssignments ? 'none' : 'block';
+    }
 }
 
 function visualUpdates() {
     // other minor visual adjustments to the page, I will have a way to turn these off eventually
-    document.querySelector('.grades').querySelector('.nav-badge').textContent = '';
+    const navBadge = document.querySelector('.grades').querySelector('.nav-badge');
+    if (navBadge) {
+        navBadge.textContent = '';
+    }
 
     // adds space under the details button
     showDetailsButton = document.querySelector('.show_all_details');
@@ -248,14 +252,16 @@ function visualUpdates() {
 
     // makes some text less wordy/more understandable/better around the page
     weightingDesc = document.querySelector('#assignments-not-weighted');
-    weightingDesc.querySelector('h2').textContent = 'Category Weights';
-    weightingDesc.querySelector('table thead tr').remove();
-    descRows = weightingDesc.querySelectorAll('table tbody tr');
-    descRows.forEach(row => {
-        if (row.querySelector('th').textContent === 'Total') {
-            row.remove();
-        }
-    });
+    if (weightingDesc) {
+        weightingDesc.querySelector('h2').textContent = 'Category Weights';
+        weightingDesc.querySelector('table thead tr').remove();
+        descRows = weightingDesc.querySelectorAll('table tbody tr');
+        descRows.forEach(row => {
+            if (row.querySelector('th').textContent === 'Total') {
+                row.remove();
+            }
+        });
+    }
     document.querySelector('#whatif-score-description').remove();
 
     // add an option to only show graded assignments
@@ -276,7 +282,9 @@ function visualUpdates() {
     // updates to say which class the grades are for, not your name
     gradeHeader = document.querySelector('.ic-Action-header__Heading');
     let classText = document.querySelector('.mobile-header-title').querySelector('div').textContent;
-    gradeHeader.textContent = `Grades for ${classText}`;
+    if (gradeHeader) {
+        gradeHeader.textContent = `Grades for ${classText}`;
+    }
     document.title = `Grades for ${classText}`;
 
     // delete those grade dots that I can never figure out how to get off
