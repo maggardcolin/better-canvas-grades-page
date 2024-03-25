@@ -1,5 +1,5 @@
 // global variables
-let hideUngradedAssignments = true;
+let hideUngradedAssignments = false;
 
 function calculateAndDisplayGrades() {
 
@@ -254,9 +254,10 @@ function toggleUngradedAssignments() {
 
     assignments.forEach(assignment => {
         if (!assignment.classList.contains('assignment_graded')) {
-            assignment.style.display = hideUngradedAssignments ? 'none' : 'table-cell';
+            assignment.style.display = hideUngradedAssignments ? 'none' : 'table-row';
         }
     });
 }
 
 calculateAndDisplayGrades();
+toggleUngradedAssignments();
