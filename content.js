@@ -210,14 +210,20 @@ function displayResults(you, mean, median, upperQuartile, lowerQuartile) {
     showDetailsButton.append(document.createElement('br'));
     showDetailsButton.append(document.createElement('br'));
 
-    // makes some text less wordy
+    // makes some text less wordy/more understandable/better around the page
     weightingDesc = document.querySelector('#assignments-not-weighted');
-    weightingDesc.querySelector('h2').textContent = 'Category Weights'
+    weightingDesc.querySelector('h2').textContent = 'Category Weights';
+    weightingDesc.querySelector('table thead tr').remove();
+    descRows = weightingDesc.querySelectorAll('table tbody tr');
+    descRows.forEach(row => {
+        if (row.querySelector('th').textContent === 'Total') {
+            row.remove();
+        }
+    });
 
     // updates to say which class the grades are for, not your name
     gradeHeader = document.querySelector('.ic-Action-header__Heading');
     let classText = document.querySelector('.mobile-header-title').querySelector('div').textContent;
-    console.log(classText);
     gradeHeader.textContent = `Grades for ${classText}`;
 
 }
