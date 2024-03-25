@@ -215,10 +215,19 @@ function displayResults(you, mean, median, upperQuartile, lowerQuartile) {
 function toggleUngradedAssignments() {
     hideUngradedAssignments = !hideUngradedAssignments;
     const assignments = document.querySelectorAll('.student_assignment.editable');
+    const categories = document.querySelectorAll('.student_assignment.hard_coded.group_total');
 
     assignments.forEach(assignment => {
         if (!assignment.classList.contains('assignment_graded')) {
             assignment.style.display = hideUngradedAssignments ? 'none' : 'table-row';
+        }
+    });
+
+    categories.forEach(category => {
+        let categoryText = category.querySelector('.grade').textContent.trim();
+        console.log(categoryText)
+        if (categoryText === 'N/A') {
+            category.style.display = hideUngradedAssignments ? 'none' : 'table-row';
         }
     });
 }
@@ -252,7 +261,7 @@ function visualUpdates() {
     onlyGradedBox.checked = true;
     const onlyGradedLabel = document.createElement('label');
     onlyGradedLabel.for = 'only-graded-assignments';
-    onlyGradedLabel.textContent = 'Only display graded assignments';
+    onlyGradedLabel.textContent = 'Only display graded assignments and categories';
 
     onlyGradedWrapper.appendChild(onlyGradedBox);
     onlyGradedWrapper.appendChild(onlyGradedLabel);
