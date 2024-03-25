@@ -23,13 +23,49 @@ function calculateAndDisplayGrades() {
     });
     console.log(categoryDetails);
 
-    // find all mean grades, append points to the correct mean point total
+    let assignmentCategories = [];
+
+    // find all assignments, see which categories they are
+    const assignments = document.querySelectorAll('.student_assignment.assignment_graded');
+    const gradeBoxes = document.querySelectorAll('.grade_details.assignment_graded');
+    assignments.forEach(assignment => {
+        const category = assignment.querySelector('.context').textContent.trim();
+        assignmentCategories.push(category);
+    });
+
+
+    // find means and medians
+    let means = [];
+    let medians = [];
+
+    gradeBoxes.forEach(box => {
+        const fields = box.querySelector('tbody tr td').textContent.split('\n').map(field => field.trim()).filter(field => field !== '');
+        fields.forEach((field, index) => {
+            if (field === "Mean:" && index + 1 < fields.length) {
+                const meanValue = parseFloat(fields[index + 1]);
+                if (!isNaN(meanValue)) {
+                    means.push(meanValue);
+                }
+            } else if (field === "Median:" && index + 1 < fields.length) {
+                const medianValue = parseFloat(fields[index + 1]);
+                if (!isNaN(medianValue)) {
+                    medians.push(medianValue);
+                }
+            }
+        });
+    });
+
+    console.log(assignmentCategories.length);
+    console.log(means.length);
+    console.log(medians.length);
+
+    // append points to the correct mean point total
 
     // find all median grades, append points to the correct median point total
 
-    // calculate the mean grade in the class
+    // calculate the mean grade in the class assuming not all categories may be filled
 
-    // calculate the median grade in the class
+    // calculate the median grade in the class assuming not all categories may be filled
 
     let mean = 1;
     let median = 2;
