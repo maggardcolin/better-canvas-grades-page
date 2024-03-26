@@ -254,6 +254,29 @@ function toggleUngradedAssignments() {
     if (smallMessage) {
         smallMessage.style.display = hideUngradedAssignments ? 'none' : 'block';
     }
+
+    // remove ungraded categories
+    const summaryTable = document.querySelector('.summary');
+    if (summaryTable) {
+        const summaryBody = summaryTable.querySelector('tbody');
+        const categories = summaryBody.querySelectorAll('tr');
+        if (hideUngradedAssignments) {
+            categories.forEach(category => {
+                percentage = category.querySelector('td').textContent;
+                if (percentage && percentage === '0%') {
+                    category.style.display = 'none';
+                }
+            });
+        } else  {
+            categories.forEach(category => {
+                percentage = category.querySelector('td').textContent;
+                if (percentage && percentage === '0%') {
+                    category.style.display = 'table-row';
+                }
+            });
+        }
+    }
+    
 }
 
 function visualUpdates() {
@@ -326,19 +349,6 @@ function visualUpdates() {
     gradeDots.forEach(dot => {
         dot.remove();
     });
-
-    // remove ungraded categories
-    const summaryTable = document.querySelector('.summary');
-    if (summaryTable) {
-        const summaryBody = summaryTable.querySelector('tbody');
-        const categories = summaryBody.querySelectorAll('tr');
-        categories.forEach(category => {
-            percentage = category.querySelector('td').textContent;
-            if (percentage && percentage === '0%') {
-                category.remove();
-            }
-        });
-    }
 }
 
 allChanges = true;
