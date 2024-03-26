@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Better Canvas Grades Page",
+  "name": "Better Canvas Grades",
   "version": "1.0",
   "description": "Makes the Canvas Grades page more functional and visually appealing.",
   "permissions": ["activeTab"],
@@ -9,5 +9,8 @@
         "matches": ["*://*/courses/*"],
         "js": ["./content.js"]
     }
-  ]  
+  ],
+  "icons": {
+    "128": "images/icon.png"
+  }
 }
