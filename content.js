@@ -50,7 +50,7 @@ function calculateAndDisplayGrades() {
         droppedGrades.push(isDropped ? 0 : 1);
     });
 
-    console.log(droppedGrades);
+    // console.log(droppedGrades);
 
     // find means and medians and max possible points
     let means = [];
@@ -105,6 +105,7 @@ function calculateAndDisplayGrades() {
     });
 
     // add the mean and median points to the correct categories
+    // change this to a dictionary and sort per assignment?
     assignmentCategories.forEach((assignment, index) => {
         categoryDetails.forEach(category => {
             if (assignment === category.title) {
