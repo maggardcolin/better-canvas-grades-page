@@ -1,5 +1,6 @@
 // global variables
 let hideUngradedAssignments = false;
+let debug = true;
 
 function calculateAndDisplayGrades() {
 
@@ -56,8 +57,6 @@ function calculateAndDisplayGrades() {
         }
     });
 
-    // console.log(assignmentCategories);
-
     // find means and medians and max possible points
     let means = [];
     let medians = [];
@@ -75,25 +74,21 @@ function calculateAndDisplayGrades() {
                     try {
                         if (field === "Mean:" && index + 1 < fields.length) {
                             const meanValue = parseFloat(fields[index + 1]);
-                            // console.log(`${field} ${fields[index + 1]}`)
                             if (!isNaN(meanValue)) {
                                 means.push(meanValue);
                             }
                         } else if (field === "Median:" && index + 1 < fields.length) {
                             const medianValue = parseFloat(fields[index + 1]);
-                            // console.log(`${field} ${fields[index + 1]}`)
                             if (!isNaN(medianValue)) {
                                 medians.push(medianValue);
                             }
                         } else if (field === "Upper Quartile:" && index + 1 < fields.length) {
                             const upperValue = parseFloat(fields[index + 1]);
-                            // console.log(`${field} ${fields[index + 1]}`)
                             if (!isNaN(upperValue)) {
                                 upperQuartiles.push(upperValue);
                             }
                         } else if (field === "Lower Quartile:" && index + 1 < fields.length) {
                             const lowerValue = parseFloat(fields[index + 1]);
-                            // console.log(`${field} ${fields[index + 1]}`)
                             if (!isNaN(lowerValue)) {
                                 lowerQuartiles.push(lowerValue);
                             }
@@ -102,13 +97,9 @@ function calculateAndDisplayGrades() {
                             const maxvalue = parseFloat(field.split(' out of ')[1]);
                             if (!isNaN(yourScore)) {
                                 yourGrades.push(yourScore);
-                            } else {
-                                console.log("NaN!");
                             }
                             if (!isNaN(maxvalue)) {
                                 maxValues.push(maxvalue);
-                            } else {
-                                console.log("NaN!");
                             }
                         }
                     } catch (e) {
@@ -132,12 +123,9 @@ function calculateAndDisplayGrades() {
                 category.totalPoints += maxValues[index];
                 category.upperQuartile += upperQuartiles[index];
                 category.lowerQuartile += lowerQuartiles[index];
-                console.log(`${category.title} ${category.yourGrade} (${yourGrades[index]})`);
             }
         });
     });
-
-    console.log(categoryDetails);
 
     /************************
     *  Calculation section  *
@@ -145,7 +133,7 @@ function calculateAndDisplayGrades() {
     // add the percentage if it was used, otherwise do not
     let totalPercentageUsed = 0;
     categoryDetails.forEach(category => {
-        console.log(`${category.title} (${category.percentage * 100}%)\nYour Score: ${category.yourGrade}\nMean: ${category.meanPoints}\nMedian: ${category.medianPoints}\nTotal possible: ${category.totalPoints}`);
+        if (debug) console.log(`${category.title} (${category.percentage * 100}%)\nYour Score: ${category.yourGrade}\nMean: ${category.meanPoints}\nMedian: ${category.medianPoints}\nTotal possible: ${category.totalPoints}`);
         if (category.totalPoints > 0) {
             totalPercentageUsed += category.percentage;
         }
