@@ -1,5 +1,6 @@
 // global variables
 let hideUngradedAssignments = false;
+let showPercentages = true;
 let debug = true;
 
 function calculateAndDisplayGrades() {
@@ -122,13 +123,6 @@ function calculateAndDisplayGrades() {
         }
     });
 
-    console.log(yourGrades);
-    console.log(means);
-    console.log(medians);
-    console.log(maxValues);
-    console.log(upperQuartiles);
-    console.log(lowerQuartiles);
-
     // add the mean and median points to the correct categories
     // change this to a dictionary and sort per assignment?
     assignmentCategories.forEach((assignment, index) => {
@@ -158,9 +152,6 @@ function calculateAndDisplayGrades() {
             });
         });
     }
-        
-
-    console.log(categoryDetails);
 
     /************************
     *  Calculation section  *
@@ -369,8 +360,79 @@ function toggleUngradedAssignments() {
             });
         }
     }
-    
 }
+
+/**/
+function togglePercentagesAndPoints() {
+    showPercentages = !showPercentages;
+    const assignments = document.querySelectorAll('.student_assignment.assignment_graded:not(excused)');
+    if (showPercentages) {
+        assignments.forEach(assignment => {
+            const totalPointsContainer = assignment.querySelector('.tooltip');
+
+            // if we have already done this just swap what's in there
+            if (totalPointsContainer.ariaLabel) {
+                let percentage = totalPointsContainer.ariaLabel;
+                let ariaText = totalPointsContainer.querySelector('span:not(grade)').textContent;
+                totalPointsContainer.querySelector('span:not(grade)').textContent = `${percentage}%`;
+                totalPointsContainer.setAttribute('aria-label', ariaText);
+                return;
+            }
+
+            // otherwise we have to manually calculate the percentage
+            let lowerNode = null;
+            const childNodes = totalPointsContainer.childNodes;
+            childNodes.forEach((node) => {
+                if (node.textContent.includes('/')) {
+                    lowerNode = node;
+                };
+            });
+
+            const grade = assignment.querySelector('.grade');
+            yourPoints = grade.textContent.split('\n').map(field => field.trim()).filter(field => field !== '')[2];
+            totalPoints = totalPointsContainer.textContent.split('/ ')[1].trim();
+            if (totalPoints === 0) {
+                console.log("total points 0");
+            }
+            let percentage = ((parseFloat(yourPoints) / parseFloat(totalPoints)) * 100).toFixed(2);
+
+            // update the text fields
+            totalPointsContainer.querySelector('span:not(grade)').textContent = `${percentage}%`;
+            lowerNode.textContent = ``;
+
+            // temporary storage of the point values
+            totalPointsContainer.setAttribute('aria-label', `${yourPoints} / ${totalPoints}`);
+        });
+    } else { 
+        console.log("Percentages off!");
+        assignments.forEach(assignment => {
+            const totalPointsContainer = assignment.querySelector('.tooltip');
+            let lowerNode = null;
+            const childNodes = totalPointsContainer.childNodes;
+            childNodes.forEach((node) => {
+                if (node.textContent.includes('/')) {
+                    lowerNode = node;
+                };
+            });
+
+            if (!totalPointsContainer.ariaLabel) {
+                // don't do anything
+                return;
+            }
+
+            // just take whatever is in the aria label
+            const yourPoints = totalPointsContainer.ariaLabel.split(' / ')[0];
+            const totalPoints = totalPointsContainer.ariaLabel.split(' / ')[1];
+
+            // update the text fields
+            totalPointsContainer.querySelector(':not(grade) span').textContent = `${yourPoints} / ${totalPoints}`;
+
+            // temporary storage of the percentage
+            totalPointsContainer.setAttribute('aria-label', `${((parseFloat(yourPoints) / parseFloat(totalPoints)) * 100).toFixed(2)}`);
+        });
+    }
+}
+/**/
 
 function visualUpdates() {
     // other minor visual adjustments to the page, I will have a way to turn these off eventually
@@ -432,6 +494,33 @@ function visualUpdates() {
     weightingDesc.appendChild(onlyGradedWrapper);
     document.querySelector('#only-graded-assignments').addEventListener('change', toggleUngradedAssignments);
 
+    // add an option to show percentages rather than points
+    const percentageWrapper = document.createElement('div');
+    percentageWrapper.style.display = 'flex';
+    percentageWrapper.style.flexDirection = 'horizontal';
+
+    // checkbox
+    const percentageCheckbox = document.createElement('input');
+    percentageCheckbox.id = 'show-percentages';
+    percentageCheckbox.type = 'checkbox';
+    percentageCheckbox.checked = false;
+    percentageCheckbox.style.accentColor = '#080808';
+    percentageCheckbox.style.width = '18px';
+    percentageCheckbox.style.margin = '3px 8px 3px 0px';
+    percentageCheckbox.style.borderRadius = '5px';
+
+    // associated label
+    const percentageLabel = document.createElement('label');
+    percentageLabel.for = 'show-percentages';
+    percentageLabel.textContent = 'Show percentages instead of points';
+    percentageLabel.style.color = '#000000';
+    
+    // put it all together
+    percentageWrapper.appendChild(percentageCheckbox);
+    percentageWrapper.appendChild(percentageLabel);
+    weightingDesc.appendChild(percentageWrapper);
+    document.querySelector('#show-percentages').addEventListener('change', togglePercentagesAndPoints);
+
     // updates to say which class the grades are for, not your name
     gradeHeader = document.querySelector('.ic-Action-header__Heading');
     let classText = document.querySelector('.mobile-header-title').querySelector('div').textContent;
@@ -459,4 +548,5 @@ if ((totalGrade.textContent.trim() !== "Calculation of totals has been disabled"
 }
 if (allChanges) {
     toggleUngradedAssignments();
+    togglePercentagesAndPoints();
 }
