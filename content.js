@@ -44,13 +44,17 @@ function calculateAndDisplayGrades() {
     const assignments = document.querySelectorAll('.student_assignment.assignment_graded');
     const gradeBoxes = document.querySelectorAll('.grade_details.assignment_graded');
     assignments.forEach(assignment => {
-        const category = assignment.querySelector('.context').textContent.trim();
-        assignmentCategories.push(category);
-        const isDropped = assignment.classList.contains('dropped');
-        droppedGrades.push(isDropped ? 0 : 1);
+        if (assignment.classList.contains('excused')) {
+            console.log('excused');
+        } else {
+            const category = assignment.querySelector('.context').textContent.trim();
+            assignmentCategories.push(category);
+            const isDropped = assignment.classList.contains('dropped');
+            droppedGrades.push(isDropped ? 0 : 1);
+        }
     });
 
-    // console.log(droppedGrades);
+    // console.log(assignmentCategories);
 
     // find means and medians and max possible points
     let means = [];
@@ -62,43 +66,54 @@ function calculateAndDisplayGrades() {
 
     gradeBoxes.forEach(box => {
         try {
-            const fields = box.querySelector('tbody tr td').textContent.split('\n').map(field => field.trim()).filter(field => field !== '');
-            fields.forEach((field, index) => {
-                try {
-                    if (field === "Mean:" && index + 1 < fields.length) {
-                        const meanValue = parseFloat(fields[index + 1]);
-                        if (!isNaN(meanValue)) {
-                            means.push(meanValue);
+            const fieldTextBox = box.querySelector('tbody tr td');
+            if (fieldTextBox) {
+                const fields = fieldTextBox.textContent.split('\n').map(field => field.trim()).filter(field => field !== '');
+                fields.forEach((field, index) => {
+                    try {
+                        if (field === "Mean:" && index + 1 < fields.length) {
+                            const meanValue = parseFloat(fields[index + 1]);
+                            // console.log(`${field} ${fields[index + 1]}`)
+                            if (!isNaN(meanValue)) {
+                                means.push(meanValue);
+                            }
+                        } else if (field === "Median:" && index + 1 < fields.length) {
+                            const medianValue = parseFloat(fields[index + 1]);
+                            // console.log(`${field} ${fields[index + 1]}`)
+                            if (!isNaN(medianValue)) {
+                                medians.push(medianValue);
+                            }
+                        } else if (field === "Upper Quartile:" && index + 1 < fields.length) {
+                            const upperValue = parseFloat(fields[index + 1]);
+                            // console.log(`${field} ${fields[index + 1]}`)
+                            if (!isNaN(upperValue)) {
+                                upperQuartiles.push(upperValue);
+                            }
+                        } else if (field === "Lower Quartile:" && index + 1 < fields.length) {
+                            const lowerValue = parseFloat(fields[index + 1]);
+                            // console.log(`${field} ${fields[index + 1]}`)
+                            if (!isNaN(lowerValue)) {
+                                lowerQuartiles.push(lowerValue);
+                            }
+                        } else if (field.includes("Your Score:")) {
+                            const yourScore = parseFloat((field.split(' out of ')[0]).split('Your Score: ')[1]);
+                            const maxvalue = parseFloat(field.split(' out of ')[1]);
+                            if (!isNaN(yourScore)) {
+                                yourGrades.push(yourScore);
+                            } else {
+                                console.log("NaN!");
+                            }
+                            if (!isNaN(maxvalue)) {
+                                maxValues.push(maxvalue);
+                            } else {
+                                console.log("NaN!");
+                            }
                         }
-                    } else if (field === "Median:" && index + 1 < fields.length) {
-                        const medianValue = parseFloat(fields[index + 1]);
-                        if (!isNaN(medianValue)) {
-                            medians.push(medianValue);
-                        }
-                    } else if (field === "Upper Quartile:" && index + 1 < fields.length) {
-                        const upperValue = parseFloat(fields[index + 1]);
-                        if (!isNaN(upperValue)) {
-                            upperQuartiles.push(upperValue);
-                        }
-                    } else if (field === "Lower Quartile:" && index + 1 < fields.length) {
-                        const lowerValue = parseFloat(fields[index + 1]);
-                        if (!isNaN(lowerValue)) {
-                            lowerQuartiles.push(lowerValue);
-                        }
-                    } else if (field.includes("Your Score:")) {
-                        const yourScore = parseFloat((field.split(' out of ')[0]).split('Your Score: ')[1]);
-                        const maxvalue = parseFloat(field.split(' out of ')[1]);
-                        if (!isNaN(yourScore)) {
-                            yourGrades.push(yourScore);
-                        }
-                        if (!isNaN(maxvalue)) {
-                            maxValues.push(maxvalue);
-                        }
+                    } catch (e) {
+                        console.log(e);
                     }
-                } catch (e) {
-                    console.log(e);
-                }
-            });
+                });
+            }
         } catch (e) {
             console.log(e);
         }
@@ -115,9 +130,12 @@ function calculateAndDisplayGrades() {
                 category.totalPoints += maxValues[index];
                 category.upperQuartile += upperQuartiles[index];
                 category.lowerQuartile += lowerQuartiles[index];
+                console.log(`${category.title} ${category.yourGrade} (${yourGrades[index]})`);
             }
         });
     });
+
+    console.log(categoryDetails);
 
     /************************
     *  Calculation section  *
@@ -296,7 +314,10 @@ function visualUpdates() {
     if (weightingDesc) {
         try {
             weightingDesc.querySelector('h2').textContent = 'Category Weights';
-            weightingDesc.querySelector('table thead tr').remove();
+            weightingDescHeaderRow = weightingDesc.querySelector('table thead tr');
+            if (weightingDescHeaderRow) {
+                weightingDescHeaderRow.remove();
+            }
             descRows = weightingDesc.querySelectorAll('table tbody tr');
             descRows.forEach(row => {
                 if (row.querySelector('th').textContent === 'Total') {
@@ -351,6 +372,7 @@ function visualUpdates() {
     });
 }
 
+console.info("Better Canvas Grades Page running.");
 allChanges = true;
 if (allChanges) {
     visualUpdates();
