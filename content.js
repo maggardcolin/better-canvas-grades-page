@@ -369,12 +369,21 @@ function togglePercentagesAndPoints() {
     if (showPercentages) {
         assignments.forEach(assignment => {
             const totalPointsContainer = assignment.querySelector('.tooltip');
+            let lowerNode = null;
+            const childNodes = totalPointsContainer.childNodes;
+            childNodes.forEach((node) => {
+                if (node.textContent.includes('/')) {
+                    lowerNode = node;
+                };
+            });
 
             // if we have already done this just swap what's in there
             if (totalPointsContainer.ariaLabel) {
                 let percentage = totalPointsContainer.ariaLabel;
-                totalPointsContainer.querySelector(':not(grade) span').textContent = `${percentage}%`;
+                totalPointsContainer.querySelector('span:not(grade)').textContent = `${percentage}%`;
             }
+
+            // otherwise we have to manually calculate the percentage
             const grade = assignment.querySelector('.grade');
             yourPoints = grade.textContent.split('\n').map(field => field.trim()).filter(field => field !== '')[2];
             totalPoints = totalPointsContainer.textContent.split('/ ')[1].trim();
@@ -383,9 +392,9 @@ function togglePercentagesAndPoints() {
             }
             let percentage = ((parseFloat(yourPoints) / parseFloat(totalPoints)) * 100).toFixed(2);
 
-            console.log(percentage);
             // update the text fields
-            totalPointsContainer.querySelector(':not(grade) span').textContent = `${percentage}%`;
+            totalPointsContainer.querySelector('span:not(grade)').textContent = `${percentage}%`;
+            lowerNode.textContent = ``;
 
             // temporary storage of the point values
             totalPointsContainer.setAttribute('aria-label', `${yourPoints} / ${totalPoints}`);
@@ -394,14 +403,25 @@ function togglePercentagesAndPoints() {
         console.log("Percentages off!");
         assignments.forEach(assignment => {
             const totalPointsContainer = assignment.querySelector('.tooltip');
+            let lowerNode = null;
+            const childNodes = totalPointsContainer.childNodes;
+            childNodes.forEach((node) => {
+                if (node.textContent.includes('/')) {
+                    lowerNode = node;
+                };
+            });
+
             if (!totalPointsContainer.ariaLabel) {
+                // don't do anything
                 return;
             }
+
+            // just take whatever is in the aria label
             const yourPoints = totalPointsContainer.ariaLabel.split(' / ')[0];
             const totalPoints = totalPointsContainer.ariaLabel.split(' / ')[1];
 
             // update the text fields
-            totalPointsContainer.querySelector(':not(grade) span').textContent = `${yourPoints}`;
+            totalPointsContainer.querySelector(':not(grade) span').textContent = `${yourPoints} / ${totalPoints}`;
 
             // temporary storage of the percentage
             totalPointsContainer.setAttribute('aria-label', `${((parseFloat(yourPoints) / parseFloat(totalPoints)) * 100).toFixed(2)}`);
