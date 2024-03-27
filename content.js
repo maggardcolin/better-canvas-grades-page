@@ -46,7 +46,9 @@ function calculateAndDisplayGrades() {
     assignments.forEach(assignment => {
         if (assignment.classList.contains('excused')) {
             console.log('excused');
-        } else {
+        } else if (!assignment.querySelector('.details').querySelector('.tooltip').getAttribute('aria-hidden')) {
+            console.log("doesn't count towards final grade");
+        } else {   
             const category = assignment.querySelector('.context').textContent.trim();
             assignmentCategories.push(category);
             const isDropped = assignment.classList.contains('dropped');
