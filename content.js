@@ -33,6 +33,16 @@ function calculateAndDisplayGrades() {
                 categoryDetails.push(categoryDict);
             }
         });
+    } else {
+        let categoryDict = {
+            yourGrade: 0,
+            meanPoints: 0,
+            medianPoints: 0,
+            upperQuartile: 0,
+            lowerQuartile: 0,
+            totalPoints: 0
+        };
+        categoryDetails.push(categoryDict);
     }
     
     /***************************
@@ -115,16 +125,28 @@ function calculateAndDisplayGrades() {
     // add the mean and median points to the correct categories
     // change this to a dictionary and sort per assignment?
     assignmentCategories.forEach((assignment, index) => {
-        categoryDetails.forEach(category => {
-            if (assignment === category.title) {
+        if (summaryTable) {
+            categoryDetails.forEach(category => {
+                if (assignment === category.title) {
+                    category.yourGrade += yourGrades[index];
+                    category.meanPoints += means[index];
+                    category.medianPoints += medians[index];
+                    category.totalPoints += maxValues[index];
+                    category.upperQuartile += upperQuartiles[index];
+                    category.lowerQuartile += lowerQuartiles[index];
+                }
+            });
+        }
+        else {
+            categoryDetails.forEach(category => {
                 category.yourGrade += yourGrades[index];
                 category.meanPoints += means[index];
                 category.medianPoints += medians[index];
                 category.totalPoints += maxValues[index];
                 category.upperQuartile += upperQuartiles[index];
                 category.lowerQuartile += lowerQuartiles[index];
-            }
-        });
+            });
+        }
     });
 
     /************************
