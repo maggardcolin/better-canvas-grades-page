@@ -369,6 +369,15 @@ function togglePercentagesAndPoints() {
     if (showPercentages) {
         assignments.forEach(assignment => {
             const totalPointsContainer = assignment.querySelector('.tooltip');
+
+            // if we have already done this just swap what's in there
+            if (totalPointsContainer.ariaLabel) {
+                let percentage = totalPointsContainer.ariaLabel;
+                totalPointsContainer.querySelector('span:not(grade)').textContent = `${percentage}%`;
+                return;
+            }
+
+            // otherwise we have to manually calculate the percentage
             let lowerNode = null;
             const childNodes = totalPointsContainer.childNodes;
             childNodes.forEach((node) => {
@@ -377,13 +386,6 @@ function togglePercentagesAndPoints() {
                 };
             });
 
-            // if we have already done this just swap what's in there
-            if (totalPointsContainer.ariaLabel) {
-                let percentage = totalPointsContainer.ariaLabel;
-                totalPointsContainer.querySelector('span:not(grade)').textContent = `${percentage}%`;
-            }
-
-            // otherwise we have to manually calculate the percentage
             const grade = assignment.querySelector('.grade');
             yourPoints = grade.textContent.split('\n').map(field => field.trim()).filter(field => field !== '')[2];
             totalPoints = totalPointsContainer.textContent.split('/ ')[1].trim();
