@@ -362,37 +362,53 @@ function toggleUngradedAssignments() {
     }
 }
 
+/**/
 function togglePercentagesAndPoints() {
     showPercentages = !showPercentages;
     const assignments = document.querySelectorAll('.student_assignment.assignment_graded:not(excused)');
     if (showPercentages) {
         assignments.forEach(assignment => {
             const totalPointsContainer = assignment.querySelector('.tooltip');
-            // if we have already done this just take what's in there
+
+            // if we have already done this just swap what's in there
             if (totalPointsContainer.ariaLabel) {
-                console.log(totalPointsContainer.ariaLabel);
-                return;
+                let percentage = totalPointsContainer.ariaLabel;
+                totalPointsContainer.querySelector(':not(grade) span').textContent = `${percentage}%`;
             }
             const grade = assignment.querySelector('.grade');
             yourPoints = grade.textContent.split('\n').map(field => field.trim()).filter(field => field !== '')[2];
             totalPoints = totalPointsContainer.textContent.split('/ ')[1].trim();
+            if (totalPoints === 0) {
+                console.log("total points 0");
+            }
             let percentage = ((parseFloat(yourPoints) / parseFloat(totalPoints)) * 100).toFixed(2);
+
             console.log(percentage);
-            // temporary storage
-            totalPointsContainer.ariaLabel = `${yourPoints} / ${totalPoints}`;
+            // update the text fields
+            totalPointsContainer.querySelector(':not(grade) span').textContent = `${percentage}%`;
+
+            // temporary storage of the point values
+            totalPointsContainer.setAttribute('aria-label', `${yourPoints} / ${totalPoints}`);
         });
     } else { 
         console.log("Percentages off!");
         assignments.forEach(assignment => {
             const totalPointsContainer = assignment.querySelector('.tooltip');
-            // if we have already done this just take what's in there
-            if (totalPointsContainer.ariaLabel) {
-                console.log(totalPointsContainer.ariaLabel);
+            if (!totalPointsContainer.ariaLabel) {
                 return;
             }
+            const yourPoints = totalPointsContainer.ariaLabel.split(' / ')[0];
+            const totalPoints = totalPointsContainer.ariaLabel.split(' / ')[1];
+
+            // update the text fields
+            totalPointsContainer.querySelector(':not(grade) span').textContent = `${yourPoints}`;
+
+            // temporary storage of the percentage
+            totalPointsContainer.setAttribute('aria-label', `${((parseFloat(yourPoints) / parseFloat(totalPoints)) * 100).toFixed(2)}`);
         });
     }
 }
+/**/
 
 function visualUpdates() {
     // other minor visual adjustments to the page, I will have a way to turn these off eventually
