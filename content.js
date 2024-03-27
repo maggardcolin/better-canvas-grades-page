@@ -4,37 +4,37 @@ let debug = true;
 
 function calculateAndDisplayGrades() {
 
+    let categoryDetails = [];
+
     // find categories and percentages and create dictionary for each category
     const summaryTable = document.querySelector('.summary');
-    if (!summaryTable) {
-        return;
+    if (summaryTable) {
+        const summaryBody = summaryTable.querySelector('tbody');
+        const categories = summaryBody.querySelectorAll('tr');
+        categories.forEach(category => {
+            const title = category.textContent.split("\n")[1].trim();
+            const percentage = category.textContent.split("\n")[2].trim();
+            let percentageValue = parseFloat(percentage.replace('%', ''));
+            let percentageDecimal = (percentageValue / 100);
+
+            // create a dictionary where there is a title, percentage, and total field
+            let categoryDict = {
+                title: title,
+                percentage: percentageDecimal,
+                drops: 0,
+                yourGrade: 0,
+                meanPoints: 0,
+                medianPoints: 0,
+                upperQuartile: 0,
+                lowerQuartile: 0,
+                totalPoints: 0
+            };
+            if (title !== 'Total') {
+                categoryDetails.push(categoryDict);
+            }
+        });
     }
-    const summaryBody = summaryTable.querySelector('tbody');
-    const categories = summaryBody.querySelectorAll('tr');
-    let categoryDetails = [];
-    categories.forEach(category => {
-        const title = category.textContent.split("\n")[1].trim();
-        const percentage = category.textContent.split("\n")[2].trim();
-        let percentageValue = parseFloat(percentage.replace('%', ''));
-        let percentageDecimal = (percentageValue / 100);
-
-        // create a dictionary where there is a title, percentage, and total field
-        let categoryDict = {
-            title: title,
-            percentage: percentageDecimal,
-            drops: 0,
-            yourGrade: 0,
-            meanPoints: 0,
-            medianPoints: 0,
-            upperQuartile: 0,
-            lowerQuartile: 0,
-            totalPoints: 0
-        };
-        if (title !== 'Total') {
-            categoryDetails.push(categoryDict);
-        }
-    });
-
+    
     /***************************
     *  Data gathering section  *
     ***************************/
