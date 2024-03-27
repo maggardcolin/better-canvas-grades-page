@@ -122,6 +122,13 @@ function calculateAndDisplayGrades() {
         }
     });
 
+    console.log(yourGrades);
+    console.log(means);
+    console.log(medians);
+    console.log(maxValues);
+    console.log(upperQuartiles);
+    console.log(lowerQuartiles);
+
     // add the mean and median points to the correct categories
     // change this to a dictionary and sort per assignment?
     assignmentCategories.forEach((assignment, index) => {
@@ -149,64 +156,116 @@ function calculateAndDisplayGrades() {
         }
     });
 
+    console.log(categoryDetails);
+
     /************************
     *  Calculation section  *
     ************************/
-    // add the percentage if it was used, otherwise do not
-    let totalPercentageUsed = 0;
-    categoryDetails.forEach(category => {
-        if (debug) console.log(`${category.title} (${category.percentage * 100}%)\nYour Score: ${category.yourGrade}\nMean: ${category.meanPoints}\nMedian: ${category.medianPoints}\nTotal possible: ${category.totalPoints}`);
-        if (category.totalPoints > 0) {
-            totalPercentageUsed += category.percentage;
-        }
-    });
+    if (summaryTable) {
+        // add the percentage if it was used, otherwise do not
+        let totalPercentageUsed = 0;
+        categoryDetails.forEach(category => {
+            if (debug) console.log(`${category.title} (${category.percentage * 100}%)\nYour Score: ${category.yourGrade}\nMean: ${category.meanPoints}\nMedian: ${category.medianPoints}\nTotal possible: ${category.totalPoints}`);
+            if (category.totalPoints > 0) {
+                totalPercentageUsed += category.percentage;
+            }
+        });
 
-    // calculate your grade
-    let you = 0;
-    categoryDetails.forEach(category => {
-        if (category.totalPoints !== 0) {
-            you += category.percentage * (category.yourGrade / category.totalPoints) * 100;
-        }
-    });
-    you /= totalPercentageUsed;
+        // calculate your grade
+        let you = 0;
+        categoryDetails.forEach(category => {
+            if (category.totalPoints !== 0) {
+                you += category.percentage * (category.yourGrade / category.totalPoints) * 100;
+            }
+        });
+        you /= totalPercentageUsed;
 
-    // calculate the mean percentage grade in the class assuming not all categories may be filled
-    let mean = 0;
-    categoryDetails.forEach(category => {
-        if (category.totalPoints !== 0) {
-            mean += category.percentage * (category.meanPoints / category.totalPoints) * 100;
-        }
-    });
-    mean /= totalPercentageUsed;
+        // calculate the mean percentage grade in the class assuming not all categories may be filled
+        let mean = 0;
+        categoryDetails.forEach(category => {
+            if (category.totalPoints !== 0) {
+                mean += category.percentage * (category.meanPoints / category.totalPoints) * 100;
+            }
+        });
+        mean /= totalPercentageUsed;
 
-    // calculate the median percentage grade in the class assuming not all categories may be filled
-    let median = 0;
-    categoryDetails.forEach(category => {
-        if (category.totalPoints !== 0) {
-            median += category.percentage * (category.medianPoints / category.totalPoints) * 100;
-        }
-    });
-    median /= totalPercentageUsed;
+        // calculate the median percentage grade in the class assuming not all categories may be filled
+        let median = 0;
+        categoryDetails.forEach(category => {
+            if (category.totalPoints !== 0) {
+                median += category.percentage * (category.medianPoints / category.totalPoints) * 100;
+            }
+        });
+        median /= totalPercentageUsed;
 
-    // calculate upper quartile
-    let upperQuartile = 0;
-    categoryDetails.forEach(category => {
-        if (category.totalPoints !== 0) {
-            upperQuartile += category.percentage * (category.upperQuartile / category.totalPoints) * 100;
-        }
-    });
-    upperQuartile /= totalPercentageUsed;
+        // calculate upper quartile
+        let upperQuartile = 0;
+        categoryDetails.forEach(category => {
+            if (category.totalPoints !== 0) {
+                upperQuartile += category.percentage * (category.upperQuartile / category.totalPoints) * 100;
+            }
+        });
+        upperQuartile /= totalPercentageUsed;
 
-    // calculate lower quartile
-    let lowerQuartile = 0;
-    categoryDetails.forEach(category => {
-        if (category.totalPoints !== 0) {
-            lowerQuartile += category.percentage * (category.lowerQuartile / category.totalPoints) * 100;
-        }
-    });
-    lowerQuartile /= totalPercentageUsed;
+        // calculate lower quartile
+        let lowerQuartile = 0;
+        categoryDetails.forEach(category => {
+            if (category.totalPoints !== 0) {
+                lowerQuartile += category.percentage * (category.lowerQuartile / category.totalPoints) * 100;
+            }
+        });
+        lowerQuartile /= totalPercentageUsed;
 
-    displayResults(you, mean, median, upperQuartile, lowerQuartile);
+        displayResults(you, mean, median, upperQuartile, lowerQuartile);
+    } else {
+
+        categoryDetails.forEach(category => {
+            if (debug) console.log(`Total\nYour Score: ${category.yourGrade}\nMean: ${category.meanPoints}\nMedian: ${category.medianPoints}\nTotal possible: ${category.totalPoints}`);
+        });
+
+        // your grade
+        let you = 0;
+        categoryDetails.forEach(category => {
+            if (category.totalPoints !== 0) {
+                you += (category.yourGrade / category.totalPoints) * 100;
+            }
+        });
+         
+        // mean
+        let mean = 0;
+        categoryDetails.forEach(category => {
+            if (category.totalPoints !== 0) {
+                mean += (category.meanPoints / category.totalPoints) * 100;
+            }
+        });
+        
+        // median
+        let median = 0;
+        categoryDetails.forEach(category => {
+            if (category.totalPoints !== 0) {
+                median += (category.medianPoints / category.totalPoints) * 100;
+            }
+        });
+
+        // upper quartile
+        let upperQuartile = 0;
+        categoryDetails.forEach(category => {
+            if (category.totalPoints !== 0) {
+                upperQuartile += (category.upperQuartile / category.totalPoints) * 100;
+            }
+        });
+
+        // lower quartile
+        let lowerQuartile = 0;
+        categoryDetails.forEach(category => {
+            if (category.totalPoints !== 0) {
+                lowerQuartile += (category.lowerQuartile / category.totalPoints) * 100;
+            }
+        });
+
+        displayResults(you, mean, median, upperQuartile, lowerQuartile);
+    }
+    
 }
 
 function displayResults(you, mean, median, upperQuartile, lowerQuartile) {
