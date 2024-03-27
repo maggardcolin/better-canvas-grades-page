@@ -3,7 +3,6 @@
   "name": "Better Canvas Grades",
   "version": "1.0",
   "description": "Makes the Canvas Grades page more functional and visually appealing.",
-  "permissions": ["activeTab"],
   "content_scripts": [
     {
         "matches": ["*://*/courses/*"],
