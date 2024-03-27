@@ -373,7 +373,9 @@ function togglePercentagesAndPoints() {
             // if we have already done this just swap what's in there
             if (totalPointsContainer.ariaLabel) {
                 let percentage = totalPointsContainer.ariaLabel;
+                let ariaText = totalPointsContainer.querySelector('span:not(grade)').textContent;
                 totalPointsContainer.querySelector('span:not(grade)').textContent = `${percentage}%`;
+                totalPointsContainer.setAttribute('aria-label', ariaText);
                 return;
             }
 
