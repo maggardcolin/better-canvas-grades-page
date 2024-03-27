@@ -144,7 +144,10 @@ function calculateAndDisplayGrades() {
                 }
             });
         }
-        else {
+    });
+
+    if (!summaryTable) {
+        yourGrades.forEach((grade, index) => {
             categoryDetails.forEach(category => {
                 category.yourGrade += yourGrades[index];
                 category.meanPoints += means[index];
@@ -153,8 +156,9 @@ function calculateAndDisplayGrades() {
                 category.upperQuartile += upperQuartiles[index];
                 category.lowerQuartile += lowerQuartiles[index];
             });
-        }
-    });
+        });
+    }
+        
 
     console.log(categoryDetails);
 
