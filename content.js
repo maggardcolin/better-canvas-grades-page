@@ -5,13 +5,13 @@
  * 
  * 1. Dropped assignements: drop the lowest mean score (currently facing DOM loading issues)
  * 2. Use a better storage structure than aria-label, perhaps a global variable or different field
- * 3. Fix What-If grades
+ * 3. Fix What-If grades (both my bugs and canvas's)
  * 4. The ability to turn off and on various grading categories (hide lecture activities)
  * 5. Customization options, general ecosystem
  */
 
 /**
- * Definitions:
+ * Definitions (for comments):
  * 
  * Sum-based grading: where a class uses a single point total rather than a set of categories with individual weights to determine final grade.
  */
@@ -19,14 +19,13 @@
 // global variables
 let hideUngradedAssignments = false; // toggles with a checkbox
 let showPercentages = true; // toggles with a checkbox
-let debug = true; // used for debug, delete eventually
+let debug = true; // used for debug, delete associated statements eventually
 
 /**
  * Calculates and displays mean, median, lower quartile, upper quartile, and user grades to display relevant information.
  */
 function calculateAndDisplayGrades() {
     
-
     /***********************
     * Data structure setup *
     ***********************/
