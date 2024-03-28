@@ -1,24 +1,40 @@
+/* Author: Colin Maggard, last updated 3/27/24 */
+
+/**
+ * Planned changes:
+ * 
+ * 1. Dropped assignements: drop the lowest mean score (currently facing DOM loading issues)
+ * 2. Use a better storage structure than aria-label, perhaps a global variable or different field
+ * 3. Fix What-If grades
+ * 4. The ability to turn off and on various grading categories (hide lecture activities)
+ */
+
+/**
+ * Definitions:
+ * 
+ * Sum-based grading: where a class uses a single point total rather than a set of categories with individual weights to determine final grade.
+ */
+
 // global variables
 let hideUngradedAssignments = false; // toggles with a checkbox
 let showPercentages = true; // toggles with a checkbox
 let debug = true; // used for debug, delete eventually
 
 /**
- * Definitions:
- * Sum-based grading: where a class uses a single point total rather than a set of categories with individual weights to determine final grade.
- */
-
-
-/**
  * Calculates and displays mean, median, lower quartile, upper quartile, and user grades to display relevant information.
  */
 function calculateAndDisplayGrades() {
     
+
+    /***********************
+    * Data structure setup *
+    ***********************/
     let categoryDetails = []; // holds each category and its associated fields, such as mean for the category, etc.
 
     // find categories and percentages and create dictionary for each category
     const summaryTable = document.querySelector('.summary');
     if (summaryTable) {
+        // this is used when categories are defined with weights individually
         const summaryBody = summaryTable.querySelector('tbody');
         const categories = summaryBody.querySelectorAll('tr');
         categories.forEach(category => {
@@ -27,7 +43,7 @@ function calculateAndDisplayGrades() {
             let percentageValue = parseFloat(percentage.replace('%', ''));
             let percentageDecimal = (percentageValue / 100);
 
-            // create a dictionary where there is a title, percentage, and statistical fields
+            // create a dictionary where there is a title, percentage, and statistical fields for each category
             let categoryDict = {
                 title: title,
                 percentage: percentageDecimal,
@@ -39,13 +55,14 @@ function calculateAndDisplayGrades() {
                 lowerQuartile: 0,
                 totalPoints: 0
             };
-            // ignore the total field, as it usually sums to 100% and is not useful for statistical calculations
+
+            // ignore the total field, as it usually/always sums to 100% and is not useful for statistical calculations
             if (title !== 'Total') {
                 categoryDetails.push(categoryDict);
             }
         });
     } else {
-        // this is in case the class uses entirely sum-based grading and no weightings
+        // this is in case the class uses entirely sum-based grading and no category weightings
         let categoryDict = {
             yourGrade: 0,
             meanPoints: 0,
@@ -87,6 +104,7 @@ function calculateAndDisplayGrades() {
     let lowerQuartiles = [];
     let maxValues = [];
 
+    // find the associated fields from each graded assignment
     gradeBoxes.forEach(box => {
         try {
             const fieldTextBox = box.querySelector('tbody tr td');
@@ -135,7 +153,7 @@ function calculateAndDisplayGrades() {
     });
 
     // add the mean and median points to the correct categories
-    // TODO change this to a dictionary and sort per assignment in case of dropped assignments?
+    // TODO sort per assignment in case of dropped assignments eventually
     assignmentCategories.forEach((assignment, index) => {
         if (summaryTable) {
             categoryDetails.forEach(category => {
