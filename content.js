@@ -280,6 +280,14 @@ function calculateAndDisplayGrades() {
     
 }
 
+/**
+ * used for the top right side of the page where grades are displayed
+ * @param {*} you your grade
+ * @param {*} mean the average grade of the class
+ * @param {*} median the grade that the 50th percentile student has
+ * @param {*} upperQuartile the grade that the 75th percentile student has
+ * @param {*} lowerQuartile the grade that the 25th percentile student has
+ */
 function displayResults(you, mean, median, upperQuartile, lowerQuartile) {
     
     const resultsContainer = document.querySelector('#student-grades-right-content');
@@ -287,49 +295,53 @@ function displayResults(you, mean, median, upperQuartile, lowerQuartile) {
     const totalPercentage = totalGrade.querySelector('.grade');
     totalGrade.style.fontWeight = 'bold';
     totalPercentage.style.fontWeight = 'bold';
+
+    // relative position in the class, keep in mind that it is based off of the median and that dropped grades are not taken into consideration yet
     let zone = (you > upperQuartile) ? 'Top 25% of Class' : (you > median) ? 'Above Average' : (you > lowerQuartile) ? 'Below Average' : 'Bottom 25% of Class';
     
-    // label
+    // "Your Performance" header
     const gradeLabel = document.createElement('h2');
     gradeLabel.textContent = 'Your Performance';
     totalGrade.prepend(gradeLabel);
 
-    // Your relative performance
+    // your relative performance compared to the class based on the nested ternary above
     totalGrade.append(document.createElement('br'));
     const relPerformance = document.createElement('span');
     relPerformance.textContent = zone;
     relPerformance.style.fontWeight = 'normal';
     totalGrade.append(relPerformance);
+
+    // add some space under to separate from the details button
     totalGrade.append(document.createElement('br'));
     totalGrade.append(document.createElement('br'));
 
-    // class performance
+    // "Class Performance" header
     const classPerformance = document.createElement('h2');
     classPerformance.textContent = 'Class Performance';
     totalGrade.append(classPerformance);
 
-    // mean
+    // mean grade of the class
     const meanSpan = document.createElement('span');
     meanSpan.textContent = `Mean: ${mean.toFixed(2)}%`;
     meanSpan.style.fontWeight = 'normal';
     totalGrade.append(meanSpan);
     totalGrade.append(document.createElement('br'));
 
-    // upper quartile
+    // upper quartile of the class
     const upperSpan = document.createElement('span');
     upperSpan.textContent = `Upper Quartile: ${upperQuartile.toFixed(2)}%`;
     upperSpan.style.fontWeight = 'normal';
     totalGrade.append(upperSpan);
     totalGrade.append(document.createElement('br'));
 
-    // median
+    // median (50th percentile) of the class
     const medianSpan = document.createElement('span');
     medianSpan.textContent = `Median: ${median.toFixed(2)}%`;
     medianSpan.style.fontWeight = 'normal';
     totalGrade.append(medianSpan);
     totalGrade.append(document.createElement('br'));
 
-    // lower quartile
+    // lower quartile of the class
     const lowerSpan = document.createElement('span');
     lowerSpan.textContent = `Lower Quartile: ${lowerQuartile.toFixed(2)}%`;
     lowerSpan.style.fontWeight = 'normal';
@@ -338,15 +350,20 @@ function displayResults(you, mean, median, upperQuartile, lowerQuartile) {
     totalGrade.append(document.createElement('br'));
 }
 
+/**
+ * Used to change between showing and hiding assignments that have not been graded yet, as well as categories that do not have any
+ * weight on the user's grade.
+ */
 function toggleUngradedAssignments() {
     hideUngradedAssignments = !hideUngradedAssignments;
 
-    // individual assigments
+    // individual assigments, dispersed throughout the page
     const assignments = document.querySelectorAll('.student_assignment.editable');
 
-    // at bottom of page
+    // categories at the bottom of the page
     const categories = document.querySelectorAll('.student_assignment.hard_coded.group_total');
 
+    // hide assignments that have not been graded
     assignments.forEach(assignment => {
         if (!assignment.classList.contains('assignment_graded')) {
             assignment.style.display = hideUngradedAssignments ? 'none' : 'table-row';
@@ -363,6 +380,7 @@ function toggleUngradedAssignments() {
         });
       }, 150);
 
+    // toggle the little message at the bottom of the page that details that ungraded assignments are not included in the grade
     const gradeSummary = document.querySelector('#grade-summary-content');
     const smallMessage = gradeSummary.querySelector('small');
     if (smallMessage) {
@@ -371,6 +389,7 @@ function toggleUngradedAssignments() {
 
     // remove ungraded categories
     const summaryTable = document.querySelector('.summary');
+    // only if there are categories to begin with
     if (summaryTable) {
         const summaryBody = summaryTable.querySelector('tbody');
         const categories = summaryBody.querySelectorAll('tr');
@@ -385,6 +404,7 @@ function toggleUngradedAssignments() {
             categories.forEach(category => {
                 percentage = category.querySelector('td').textContent;
                 if (percentage && percentage === '0%') {
+                    // unhide said categories
                     category.style.display = 'table-row';
                 }
             });
@@ -392,7 +412,6 @@ function toggleUngradedAssignments() {
     }
 }
 
-/**/
 function togglePercentagesAndPoints() {
     showPercentages = !showPercentages;
     const assignments = document.querySelectorAll('.student_assignment.assignment_graded:not(excused)');
@@ -461,7 +480,6 @@ function togglePercentagesAndPoints() {
         });
     }
 }
-/**/
 
 function visualUpdates() {
     // other minor visual adjustments to the page, I will have a way to turn these off eventually
