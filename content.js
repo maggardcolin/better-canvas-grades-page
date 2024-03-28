@@ -412,6 +412,9 @@ function toggleUngradedAssignments() {
     }
 }
 
+/**
+ * Toggle whether or not percentages are shown to replace point totals. When percentages are already shown, nothing happens.
+ */
 function togglePercentagesAndPoints() {
     showPercentages = !showPercentages;
     const assignments = document.querySelectorAll('.student_assignment.assignment_graded:not(excused)');
@@ -419,7 +422,7 @@ function togglePercentagesAndPoints() {
         assignments.forEach(assignment => {
             const totalPointsContainer = assignment.querySelector('.tooltip');
 
-            // if we have already done this just swap what's in there
+            // if we have already done this just swap what's in there already (no need to recalculate)
             if (totalPointsContainer.ariaLabel) {
                 let percentage = totalPointsContainer.ariaLabel;
                 let ariaText = totalPointsContainer.querySelector('span:not(grade)').textContent;
@@ -428,7 +431,7 @@ function togglePercentagesAndPoints() {
                 return;
             }
 
-            // otherwise we have to manually calculate the percentage
+            // otherwise we have to calculate the percentage. first, find the field that shows the total
             let lowerNode = null;
             const childNodes = totalPointsContainer.childNodes;
             childNodes.forEach((node) => {
@@ -449,11 +452,13 @@ function togglePercentagesAndPoints() {
             totalPointsContainer.querySelector('span:not(grade)').textContent = `${percentage}%`;
             lowerNode.textContent = ``;
 
-            // temporary storage of the point values
+            // TODO temporary storage of the point values in an attribute so that we can access them again without calculating (use data not aria-label)
             totalPointsContainer.setAttribute('aria-label', `${yourPoints} / ${totalPoints}`);
         });
     } else { 
         assignments.forEach(assignment => {
+
+            // find the node that has the point total
             const totalPointsContainer = assignment.querySelector('.tooltip');
             let lowerNode = null;
             const childNodes = totalPointsContainer.childNodes;
@@ -464,11 +469,11 @@ function togglePercentagesAndPoints() {
             });
 
             if (!totalPointsContainer.ariaLabel) {
-                // don't do anything
+                // don't do anything, since the fields we want are already in the DOM
                 return;
             }
 
-            // just take whatever is in the aria label
+            // just take whatever is in the aria label and take the fields out of that
             const yourPoints = totalPointsContainer.ariaLabel.split(' / ')[0];
             const totalPoints = totalPointsContainer.ariaLabel.split(' / ')[1];
 
@@ -481,8 +486,12 @@ function togglePercentagesAndPoints() {
     }
 }
 
+/**
+ * Used for various other visual updates, I am planning on making this optional in the future.
+ */
 function visualUpdates() {
-    // other minor visual adjustments to the page, I will have a way to turn these off eventually
+
+    // remove the amount of "new" grades from the left menu
     const navBadge = document.querySelector('.grades').querySelector('.nav-badge');
     if (navBadge) {
         navBadge.textContent = '';
@@ -493,7 +502,7 @@ function visualUpdates() {
     showDetailsButton.append(document.createElement('br'));
     showDetailsButton.append(document.createElement('br'));
 
-    // makes some text less wordy/more understandable/better around the page
+    // makes the summary table less wordy
     weightingDesc = document.querySelector('#assignments-not-weighted');
     if (weightingDesc) {
         try {
@@ -514,12 +523,14 @@ function visualUpdates() {
     }
     document.querySelector('#whatif-score-description').remove();
 
-    // add an option to only show graded assignments
+    /***********************************
+    * Only graded assignments checkbox *
+    ***********************************/
     const onlyGradedWrapper = document.createElement('div');
     onlyGradedWrapper.style.display = 'flex';
     onlyGradedWrapper.style.flexDirection = 'horizontal';
 
-    // checkbox
+    // checkbox itself
     const onlyGradedBox = document.createElement('input');
     onlyGradedBox.id = 'only-graded-assignments';
     onlyGradedBox.type = 'checkbox';
@@ -541,12 +552,14 @@ function visualUpdates() {
     weightingDesc.appendChild(onlyGradedWrapper);
     document.querySelector('#only-graded-assignments').addEventListener('change', toggleUngradedAssignments);
 
-    // add an option to show percentages rather than points
+    /*********************************************************
+    * Alternate between showing percentages and point totals *
+    *********************************************************/
     const percentageWrapper = document.createElement('div');
     percentageWrapper.style.display = 'flex';
     percentageWrapper.style.flexDirection = 'horizontal';
 
-    // checkbox
+    // checkbox itself
     const percentageCheckbox = document.createElement('input');
     percentageCheckbox.id = 'show-percentages';
     percentageCheckbox.type = 'checkbox';
@@ -568,7 +581,7 @@ function visualUpdates() {
     weightingDesc.appendChild(percentageWrapper);
     document.querySelector('#show-percentages').addEventListener('change', togglePercentagesAndPoints);
 
-    // updates to say which class the grades are for, not your name
+    // update the title of the page and the main header to show the name of the class rather than your name
     gradeHeader = document.querySelector('.ic-Action-header__Heading');
     let classText = document.querySelector('.mobile-header-title').querySelector('div').textContent;
     if (gradeHeader) {
@@ -583,17 +596,22 @@ function visualUpdates() {
     });
 }
 
-console.info("Better Canvas Grades Page running.");
-allChanges = true;
-if (allChanges) {
-    visualUpdates();
-}
-const totalGrade = document.querySelector('.final_grade');
-const gradePercentage = document.querySelector('.grade');
-if ((totalGrade.textContent.trim() !== "Calculation of totals has been disabled") && (gradePercentage.textContent.trim() !== "N/A")) {
-    calculateAndDisplayGrades();
-}
-if (allChanges) {
-    toggleUngradedAssignments();
-    togglePercentagesAndPoints();
+/** 
+ * Main code that decides which functions are run
+*/
+{
+    console.info("Better Canvas Grades Page running.");
+    allChanges = true;
+    if (allChanges) {
+        visualUpdates();
+    }
+    const totalGrade = document.querySelector('.final_grade');
+    const gradePercentage = document.querySelector('.grade');
+    if ((totalGrade.textContent.trim() !== "Calculation of totals has been disabled") && (gradePercentage.textContent.trim() !== "N/A")) {
+        calculateAndDisplayGrades();
+    }
+    if (allChanges) {
+        toggleUngradedAssignments();
+        togglePercentagesAndPoints();
+    }
 }
