@@ -24,6 +24,6 @@ How the page looks when percentages are enabled rather than point totals
 - The bug where you are unable to revert your score after inputting a What-If score is an issue with Canvas, not this extension.
 - As of right now, this extension has only been tested on UW-Madison's Canvas page, but it should work on other domains as well.
 - I will eventually add options to only have the grade statistics part, and to customize the experience overall. Currently, the page is not customizable other than the two checkboxes, and I plan on eventually expanding this as I have more time.
-- I keep mixing up "dropped classes" and "dropped grades" in my documentation and communications so if you see that anywhere and are confused that is my bad and I meant "dropped classes".
+- I keep mixing up "dropped classes" and "dropped grades" in my documentation and communications so if you see that anywhere and are confused that is my bad and I meant "dropped grades".
 
 ### Let me know if you find any errors with this program not listed on the issues page or in these notes, or if you have general feedback. Enjoy!
