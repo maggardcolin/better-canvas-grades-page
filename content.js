@@ -7,6 +7,7 @@
  * 2. Use a better storage structure than aria-label, perhaps a global variable or different field
  * 3. Fix What-If grades
  * 4. The ability to turn off and on various grading categories (hide lecture activities)
+ * 5. Customization options, general ecosystem
  */
 
 /**
@@ -104,7 +105,7 @@ function calculateAndDisplayGrades() {
     let lowerQuartiles = [];
     let maxValues = [];
 
-    // find the associated fields from each graded assignment
+    // find certain statistical fields from each graded assignment, like mean, median, etc.
     gradeBoxes.forEach(box => {
         try {
             const fieldTextBox = box.querySelector('tbody tr td');
@@ -169,7 +170,7 @@ function calculateAndDisplayGrades() {
         }
     });
 
-    // in the case of sum-based grading, note that grade is not necessary
+    // in the case of sum-based grading, note that "grade" is not necessary
     if (!summaryTable) {
         yourGrades.forEach((grade, index) => {
             categoryDetails.forEach(category => {
@@ -186,7 +187,6 @@ function calculateAndDisplayGrades() {
     /************************
     *  Calculation section  *
     ************************/
-
     // if categories are present
     if (summaryTable) {
         // add the percentage if it was used, otherwise do not, this allows the current grade to be discerned rather than using the overall categories
@@ -247,7 +247,9 @@ function calculateAndDisplayGrades() {
         displayResults(you, mean, median, upperQuartile, lowerQuartile);
     } 
     
-    // sum-based grading instead
+    /************************************
+    * Sum-based grading is used instead *
+    ************************************/
     else {
         categoryDetails.forEach(category => {
             if (debug) console.log(`Total\nYour Score: ${category.yourGrade}\nMean: ${category.meanPoints}\nMedian: ${category.medianPoints}\nTotal possible: ${category.totalPoints}`);
