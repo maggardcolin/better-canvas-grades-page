@@ -1,11 +1,20 @@
 // global variables
-let hideUngradedAssignments = false;
-let showPercentages = true;
-let debug = true;
+let hideUngradedAssignments = false; // toggles with a checkbox
+let showPercentages = true; // toggles with a checkbox
+let debug = true; // used for debug, delete eventually
 
+/**
+ * Definitions:
+ * Sum-based grading: where a class uses a single point total rather than a set of categories with individual weights to determine final grade.
+ */
+
+
+/**
+ * Calculates and displays mean, median, lower quartile, upper quartile, and user grades to display relevant information.
+ */
 function calculateAndDisplayGrades() {
-
-    let categoryDetails = [];
+    
+    let categoryDetails = []; // holds each category and its associated fields, such as mean for the category, etc.
 
     // find categories and percentages and create dictionary for each category
     const summaryTable = document.querySelector('.summary');
@@ -18,7 +27,7 @@ function calculateAndDisplayGrades() {
             let percentageValue = parseFloat(percentage.replace('%', ''));
             let percentageDecimal = (percentageValue / 100);
 
-            // create a dictionary where there is a title, percentage, and total field
+            // create a dictionary where there is a title, percentage, and statistical fields
             let categoryDict = {
                 title: title,
                 percentage: percentageDecimal,
@@ -30,11 +39,13 @@ function calculateAndDisplayGrades() {
                 lowerQuartile: 0,
                 totalPoints: 0
             };
+            // ignore the total field, as it usually sums to 100% and is not useful for statistical calculations
             if (title !== 'Total') {
                 categoryDetails.push(categoryDict);
             }
         });
     } else {
+        // this is in case the class uses entirely sum-based grading and no weightings
         let categoryDict = {
             yourGrade: 0,
             meanPoints: 0,
@@ -57,9 +68,9 @@ function calculateAndDisplayGrades() {
     const gradeBoxes = document.querySelectorAll('.grade_details.assignment_graded');
     assignments.forEach(assignment => {
         if (assignment.classList.contains('excused')) {
-            console.log('excused');
+            console.log('An assignment has been detected as excused.');
         } else if (!assignment.querySelector('.details').querySelector('.tooltip').getAttribute('aria-hidden')) {
-            console.log("doesn't count towards final grade");
+            console.log("An assignment has been detected that does not count towards the final grade.");
         } else {   
             const category = assignment.querySelector('.context').textContent.trim();
             assignmentCategories.push(category);
@@ -124,7 +135,7 @@ function calculateAndDisplayGrades() {
     });
 
     // add the mean and median points to the correct categories
-    // change this to a dictionary and sort per assignment?
+    // TODO change this to a dictionary and sort per assignment in case of dropped assignments?
     assignmentCategories.forEach((assignment, index) => {
         if (summaryTable) {
             categoryDetails.forEach(category => {
@@ -140,6 +151,7 @@ function calculateAndDisplayGrades() {
         }
     });
 
+    // in the case of sum-based grading, note that grade is not necessary
     if (!summaryTable) {
         yourGrades.forEach((grade, index) => {
             categoryDetails.forEach(category => {
@@ -156,10 +168,13 @@ function calculateAndDisplayGrades() {
     /************************
     *  Calculation section  *
     ************************/
+
+    // if categories are present
     if (summaryTable) {
-        // add the percentage if it was used, otherwise do not
+        // add the percentage if it was used, otherwise do not, this allows the current grade to be discerned rather than using the overall categories
         let totalPercentageUsed = 0;
         categoryDetails.forEach(category => {
+            // display statistics if in debug mode
             if (debug) console.log(`${category.title} (${category.percentage * 100}%)\nYour Score: ${category.yourGrade}\nMean: ${category.meanPoints}\nMedian: ${category.medianPoints}\nTotal possible: ${category.totalPoints}`);
             if (category.totalPoints > 0) {
                 totalPercentageUsed += category.percentage;
@@ -175,7 +190,7 @@ function calculateAndDisplayGrades() {
         });
         you /= totalPercentageUsed;
 
-        // calculate the mean percentage grade in the class assuming not all categories may be filled
+        // calculate the mean percentage grade in the class assuming
         let mean = 0;
         categoryDetails.forEach(category => {
             if (category.totalPoints !== 0) {
@@ -184,7 +199,7 @@ function calculateAndDisplayGrades() {
         });
         mean /= totalPercentageUsed;
 
-        // calculate the median percentage grade in the class assuming not all categories may be filled
+        // calculate the median percentage grade in the class assuming
         let median = 0;
         categoryDetails.forEach(category => {
             if (category.totalPoints !== 0) {
@@ -212,8 +227,10 @@ function calculateAndDisplayGrades() {
         lowerQuartile /= totalPercentageUsed;
 
         displayResults(you, mean, median, upperQuartile, lowerQuartile);
-    } else {
-
+    } 
+    
+    // sum-based grading instead
+    else {
         categoryDetails.forEach(category => {
             if (debug) console.log(`Total\nYour Score: ${category.yourGrade}\nMean: ${category.meanPoints}\nMedian: ${category.medianPoints}\nTotal possible: ${category.totalPoints}`);
         });
@@ -264,16 +281,19 @@ function calculateAndDisplayGrades() {
 }
 
 function displayResults(you, mean, median, upperQuartile, lowerQuartile) {
+    
     const resultsContainer = document.querySelector('#student-grades-right-content');
     const totalGrade = resultsContainer.querySelector('.final_grade');
     const totalPercentage = totalGrade.querySelector('.grade');
     totalGrade.style.fontWeight = 'bold';
     totalPercentage.style.fontWeight = 'bold';
     let zone = (you > upperQuartile) ? 'Top 25% of Class' : (you > median) ? 'Above Average' : (you > lowerQuartile) ? 'Below Average' : 'Bottom 25% of Class';
+    
     // label
     const gradeLabel = document.createElement('h2');
     gradeLabel.textContent = 'Your Performance';
     totalGrade.prepend(gradeLabel);
+
     // Your relative performance
     totalGrade.append(document.createElement('br'));
     const relPerformance = document.createElement('span');
@@ -282,28 +302,33 @@ function displayResults(you, mean, median, upperQuartile, lowerQuartile) {
     totalGrade.append(relPerformance);
     totalGrade.append(document.createElement('br'));
     totalGrade.append(document.createElement('br'));
+
     // class performance
     const classPerformance = document.createElement('h2');
     classPerformance.textContent = 'Class Performance';
     totalGrade.append(classPerformance);
+
     // mean
     const meanSpan = document.createElement('span');
     meanSpan.textContent = `Mean: ${mean.toFixed(2)}%`;
     meanSpan.style.fontWeight = 'normal';
     totalGrade.append(meanSpan);
     totalGrade.append(document.createElement('br'));
+
     // upper quartile
     const upperSpan = document.createElement('span');
     upperSpan.textContent = `Upper Quartile: ${upperQuartile.toFixed(2)}%`;
     upperSpan.style.fontWeight = 'normal';
     totalGrade.append(upperSpan);
     totalGrade.append(document.createElement('br'));
+
     // median
     const medianSpan = document.createElement('span');
     medianSpan.textContent = `Median: ${median.toFixed(2)}%`;
     medianSpan.style.fontWeight = 'normal';
     totalGrade.append(medianSpan);
     totalGrade.append(document.createElement('br'));
+
     // lower quartile
     const lowerSpan = document.createElement('span');
     lowerSpan.textContent = `Lower Quartile: ${lowerQuartile.toFixed(2)}%`;
@@ -315,7 +340,11 @@ function displayResults(you, mean, median, upperQuartile, lowerQuartile) {
 
 function toggleUngradedAssignments() {
     hideUngradedAssignments = !hideUngradedAssignments;
+
+    // individual assigments
     const assignments = document.querySelectorAll('.student_assignment.editable');
+
+    // at bottom of page
     const categories = document.querySelectorAll('.student_assignment.hard_coded.group_total');
 
     assignments.forEach(assignment => {
@@ -324,6 +353,7 @@ function toggleUngradedAssignments() {
         }
     });
 
+    // used since categories at the bottom are dynamically loaded and do not work at page load (look into later)
     setTimeout(function() {
         categories.forEach(category => {
             let categoryText = category.querySelector('.grade').textContent.trim();
@@ -404,7 +434,6 @@ function togglePercentagesAndPoints() {
             totalPointsContainer.setAttribute('aria-label', `${yourPoints} / ${totalPoints}`);
         });
     } else { 
-        console.log("Percentages off!");
         assignments.forEach(assignment => {
             const totalPointsContainer = assignment.querySelector('.tooltip');
             let lowerNode = null;
