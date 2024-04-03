@@ -511,10 +511,10 @@ function togglePercentagesAndPoints() {
 function visualUpdates() {
 
     // remove the amount of "new" grades from the left menu
-    const navBadge = document.querySelector('.grades').querySelector('.nav-badge');
-    if (navBadge) {
-        navBadge.textContent = '';
-    }
+    //const navBadge = document.querySelector('.grades').querySelector('.nav-badge');
+    //if (navBadge) {
+    //    navBadge.textContent = '';
+    //}
 
     // adds space under the details button
     showDetailsButton = document.querySelector('.show_all_details');
@@ -609,10 +609,10 @@ function visualUpdates() {
     document.title = `Grades for ${classText}`;
 
     // delete those grade dots that I can never figure out how to get off
-    gradeDots = document.querySelectorAll('.unread_dot.grade_dot');
-    gradeDots.forEach(dot => {
-        dot.remove();
-    });
+    //gradeDots = document.querySelectorAll('.unread_dot.grade_dot');
+    //gradeDots.forEach(dot => {
+    //    dot.remove();
+    //});
 }
 
 /** 
