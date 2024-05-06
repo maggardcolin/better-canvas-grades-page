@@ -313,7 +313,7 @@ function displayResults(you, mean, median, upperQuartile, lowerQuartile) {
     totalPercentage.style.fontWeight = 'bold';
 
     // relative position in the class, keep in mind that it is based off of the median and that dropped grades are not taken into consideration yet
-    let zone = (you >= upperQuartile) ? 'Top 25% of Class' : (you >= median) ? 'Above Average' : (you >= lowerQuartile) ? 'Below Average' : 'Bottom 25% of Class';
+    // let zone = (you >= upperQuartile) ? 'Top 25% of Class' : (you >= median) ? 'Above Average' : (you >= lowerQuartile) ? 'Below Average' : 'Bottom 25% of Class';
     
     // "Your Performance" header
     const gradeLabel = document.createElement('h2');
@@ -321,13 +321,14 @@ function displayResults(you, mean, median, upperQuartile, lowerQuartile) {
     totalGrade.prepend(gradeLabel);
 
     // your relative performance compared to the class based on the nested ternary above
-    totalGrade.append(document.createElement('br'));
+    /** totalGrade.append(document.createElement('br'));
     const relPerformance = document.createElement('span');
     relPerformance.textContent = zone;
     relPerformance.style.fontWeight = 'normal';
     totalGrade.append(relPerformance);
 
     // add some space under to separate from the details button
+    /**/
     totalGrade.append(document.createElement('br'));
     totalGrade.append(document.createElement('br'));
 
