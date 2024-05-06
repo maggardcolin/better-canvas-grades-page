@@ -1,13 +1,12 @@
-/* Author: Colin Maggard, last updated 3/27/24 */
+/* Author: Colin Maggard, last updated 5/6/24 */
 
 /**
  * Planned changes:
  * 
- * 1. Dropped assignements: drop the lowest mean score (currently facing DOM loading issues)
+ * 1. Dropped assignements: drop the lowest mean score (these are loaded into DOM differently)
  * 2. Use a better storage structure than aria-label, perhaps a global variable or different field
  * 3. Fix What-If grades (both my bugs and canvas's)
- * 4. The ability to turn off and on various grading categories (hide lecture activities)
- * 5. Customization options, general ecosystem
+ * 4. Customization options, general ecosystem
  */
 
 /**
@@ -19,7 +18,6 @@
 // global variables
 let hideUngradedAssignments = false; // toggles with a checkbox
 let showPercentages = true; // toggles with a checkbox
-let debug = true; // used for debug, delete associated statements eventually
 
 /**
  * Calculates and displays mean, median, lower quartile, upper quartile, and user grades to display relevant information.
@@ -191,8 +189,7 @@ function calculateAndDisplayGrades() {
         // add the percentage if it was used, otherwise do not, this allows the current grade to be discerned rather than using the overall categories
         let totalPercentageUsed = 0;
         categoryDetails.forEach(category => {
-            // display statistics if in debug mode
-            if (debug) console.log(`${category.title} (${category.percentage * 100}%)\nYour Score: ${category.yourGrade}\nMean: ${category.meanPoints}\nMedian: ${category.medianPoints}\nTotal possible: ${category.totalPoints}`);
+            // console.log(`${category.title} (${category.percentage * 100}%)\nYour Score: ${category.yourGrade}\nMean: ${category.meanPoints}\nMedian: ${category.medianPoints}\nTotal possible: ${category.totalPoints}`);
             if (category.totalPoints > 0) {
                 totalPercentageUsed += category.percentage;
             }
@@ -251,7 +248,7 @@ function calculateAndDisplayGrades() {
     ************************************/
     else {
         categoryDetails.forEach(category => {
-            if (debug) console.log(`Total\nYour Score: ${category.yourGrade}\nMean: ${category.meanPoints}\nMedian: ${category.medianPoints}\nTotal possible: ${category.totalPoints}`);
+            // console.log(`Total\nYour Score: ${category.yourGrade}\nMean: ${category.meanPoints}\nMedian: ${category.medianPoints}\nTotal possible: ${category.totalPoints}`);
         });
 
         // your grade
@@ -316,7 +313,7 @@ function displayResults(you, mean, median, upperQuartile, lowerQuartile) {
     totalPercentage.style.fontWeight = 'bold';
 
     // relative position in the class, keep in mind that it is based off of the median and that dropped grades are not taken into consideration yet
-    let zone = (you > upperQuartile) ? 'Top 25% of Class' : (you > median) ? 'Above Average' : (you > lowerQuartile) ? 'Below Average' : 'Bottom 25% of Class';
+    let zone = (you >= upperQuartile) ? 'Top 25% of Class' : (you >= median) ? 'Above Average' : (you >= lowerQuartile) ? 'Below Average' : 'Bottom 25% of Class';
     
     // "Your Performance" header
     const gradeLabel = document.createElement('h2');
@@ -336,7 +333,7 @@ function displayResults(you, mean, median, upperQuartile, lowerQuartile) {
 
     // "Class Performance" header
     const classPerformance = document.createElement('h2');
-    classPerformance.textContent = 'Class Performance';
+    classPerformance.textContent = 'Estimated Class Performance';
     totalGrade.append(classPerformance);
 
     // mean grade of the class
@@ -510,7 +507,7 @@ function togglePercentagesAndPoints() {
  */
 function visualUpdates() {
 
-    // remove the amount of "new" grades from the left menu
+    // remove the amount of "new" grades from the left menu, feature was requested to be removed, work on making optional
     //const navBadge = document.querySelector('.grades').querySelector('.nav-badge');
     //if (navBadge) {
     //    navBadge.textContent = '';
@@ -608,7 +605,7 @@ function visualUpdates() {
     }
     document.title = `Grades for ${classText}`;
 
-    // delete those grade dots that I can never figure out how to get off
+    // delete those grade dots that I can never figure out how to get off, feature was requested to be removed, work on making optional
     //gradeDots = document.querySelectorAll('.unread_dot.grade_dot');
     //gradeDots.forEach(dot => {
     //    dot.remove();
