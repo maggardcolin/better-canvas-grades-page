@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Better Canvas Grades",
-  "version": "1.4",
+  "version": "1.4.1",
   "description": "Makes the Canvas Grades page more functional and visually appealing.",
   "content_scripts": [
     {
